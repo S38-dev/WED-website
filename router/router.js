@@ -2,8 +2,9 @@ const express = require("express")
 const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
-app.use(express.urlencoded({ extended: true })); 
 
+app.use(express.urlencoded({ extended: true })); 
+const { addcomment, getcomment } = require('../db/db');
 router.get("/", (req, res) => {
     
 
@@ -36,17 +37,19 @@ router.get("/catering", (req, res) => {
 
 })
 
-
-router.get("/add-review", (req, res) => {
-
-    res.render('home',{ review:review })
+//showing review on home page
+router.get("/add-review", async (req, res) => {
+    console.log( await getcomment());
+    const comments = await getcomment();
+     
+    res.render('home',{ comments:comments  , user })
 
 })
-
+// adding review
 router.post("/add-review",(req,res)=>{
    let comment =req.body.comment;
    // add these comments to pg database
-  
+   addcomment(comment);
 })
 
 router.get("/profile", (req, res) => {
