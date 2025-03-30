@@ -4,7 +4,7 @@ const { Client } = pg;
 // PostgreSQL configuration
 const db = new Client({
   user: 'postgres',
-  host: 'localhost',
+  host: 'localhost',   
   database: 'wd',
   password: '1234',
   port: 5432,
