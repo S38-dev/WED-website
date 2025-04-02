@@ -33,9 +33,34 @@ async function addcomment(comment) {
 
 // Function to fetch all comments
 async function getcomment() {
-  const query = 'SELECT user_id , comment  FROM comment';
+  const query = `select user.name,comment.comment, user.profile_pic FROM comment INNER JOIN
+    user on user.id=comment.user_id               
+`
   try {
-    const res = await db.query(query);
+    const res = await db.query(query, [item]);
+    console.log('Fetched comments:', res.rows);
+    return res.rows; // Return the fetched comments
+  } catch (error) {
+    console.error('Error fetching comments:', error.message);
+    throw error;
+  }
+}
+
+async function getCartItems(user_id){
+   const query = `SELECT 
+    cart.cart_id,
+    cart.user_id,
+    cart_items.item_id,
+    cart_items.quantity,
+    products.product_id,
+    products.product_name,
+    products.product_price 
+FROM cart
+INNER JOIN cart_items ON cart.cart_id = cart_items.cart_id
+INNER JOIN products ON cart_items.product_id = products.product_id
+WHERE cart.user_id = $1;`;
+  try {
+    const res = await db.query(query,[user_id]);
     console.log('Fetched comments:', res.rows);
     return res.rows; // Return the fetched comments
   } catch (error) {
@@ -46,8 +71,28 @@ async function getcomment() {
 
 
 
+async function addcartitem(product){
+// adding cart product here
+   
+}
+async function getPassword(username){
+  try {
+   const query="Select password from users where  gmail = $1 "
+    const res = await db.query(query,[username]);
+    console.log('Fetched comments:', res.rows);
+    return res.rows;  
+
+} catch(err){
+  console.log("error in getting the password ",err.message)
+}
+
+
+}
+
+
 // Export functions for use in other modules
 module.exports = {
   addcomment,
   getcomment,
+  getcartitems,
 };

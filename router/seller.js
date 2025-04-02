@@ -5,35 +5,51 @@ const app=express()
 const {addproduct,editproduct } = require('../db/seller_db');
 app.use(express.urlencoded({ extended: true })); 
 
-app.post("/sellerhub", async(req, res) => {
-    if (req.body.action == "edit") {
-        // add the edited value to the db
-        await editproduct(req.body.product_id, req.body.newtext)
+// app.post("/sellerhub", async(req, res) => {
+//     if (req.body.action == "edit") {
+//         // add the edited value to the db
+//         await editproduct(req.body.product_id, req.body.newtext)
 
       
 
-        res.render("seller_hub", { products: getproducts()})
-    }
+//         res.render("seller_hub", { products: getproducts()})
+//     }
 
 
-})
-app.get("/sellerhub", (req, res) => {
+// })
+router.get("/sellerhub", (req, res) => {
     res.render("seller_hub", { products: getProducts() });
 });
 
 
-app.post("/addproduct", async  (req, res) => {
-    if (req.body.action == "addproduct") {
-        //add new product 
-       await  addproduct(req.body)
+router.post("/sellerhub/action", async  (req, res) => {
+     
+    if (req.body.action=="add_product"){
+      res.render("add_product")
 
-      let  products = getproducts()
-        res.render("seller_hub", { products: products })
+}
+
+  
+   
+      if (req.body.action == "edit") {
+        // add the edited value to the db
+        await editproduct(req.body.product_id, req.body.newtext)
+       
+      
+
+        res.render("seller_hub", { products: getproducts()})
     }
-
-
+    
 })
+
+ router.post("/sellerhub/add", (req,res)=>{
+    
+         addproduct(req.body);
+        res.removeHeader("seller_hub");
+ 
+})
+
 const PORT = 3000;
-app.listen(PORT, () => {
+router.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
