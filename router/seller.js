@@ -42,14 +42,10 @@ router.post("/sellerhub/action", async  (req, res) => {
     
 })
 
- router.post("/sellerhub/add", (req,res)=>{
+ router.post("/sellerhub/add", async (req,res)=>{
     
-         addproduct(req.body);
+        await addproduct(req.body);
         res.removeHeader("seller_hub");
  
 })
 
-const PORT = 3000;
-router.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});

@@ -19,7 +19,7 @@ app.use(session({
 }))
 
 
-router.get("/profile", (req, res) => {
+router.get("/profile/:username", (req, res) => {
   if (req.isAuthenticated()){
     res.render('profile.ejs');
   } else {
@@ -28,10 +28,16 @@ router.get("/profile", (req, res) => {
 });
 
 
-router.get("/profile/edit", (req, res) => {
+router.get("/profile/:username/edit", (req, res) => {
 
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated()  ) {
+    if(req.params.username==req.user.username){
     res.render("editpage")
+    }
+   else{
+   console.log("you arent allowed to edit another user's information")
+
+}
   } else {
     res.redirect("/login");
   }
@@ -47,7 +53,7 @@ router.post("/profile/edit/upload", (req, res) => {
 
 })
 router.get("/logout", (req, res) => {
-
+   
 })
 
 router.get("/login", (req, res) => {
@@ -65,7 +71,7 @@ router.post("/login/submit", passport.authenticate("local",{
 //local 
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
   try {
-    const hashresult = await getPassword(username);
+    const hashresult = await getPassword(username);//from db
     if (hashresult.rows.length === 0) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
@@ -79,14 +85,14 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
   }
 }));
 
-passport.serilizer(function(user,cb){
+passport.serializeUser(function(user,cb){
   cb(null,user)
 
 })
 
 passport.deserializeUser(function(user,cb){
   cb(null,user)
-
+  
 })
 
 
@@ -99,3 +105,7 @@ passport.deserializeUser(function(user,cb){
 router.get("/register", (req, res) => {
   // adiing basic local passport authetication here        
 })
+
+
+
+module.exports= passport

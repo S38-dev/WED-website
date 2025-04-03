@@ -10,25 +10,37 @@ let user_id ;
 
 //home
 
-router.get("/", (req, res) => {
-    
-     
-    res.render('home.ejs');
+router.get("/", async (req, res) => {
+ console.log("Route / is being hit");
 
-})
+    try {
+        const comments = await getcomment(); // Fetch comments
+
+        console.log(comments);
+        let all_comments = comments.comment;
+        let user = comments.user_id;
+        let profile_pic = comments.profile_pic;
+
+        if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
+            res.json({ all_comments, user, user_profile: profile_pic });
+        } else {
+            res.render("home.ejs", { all_comments, user, user_profile: profile_pic });
+        }
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+    
+    
 
 //galary
 
 
 
 router.get("/home", async (req, res) => {
-
-    const comments = await getcomment();
-    console.log(comments);
-    let all_comments = comments.comment
-    let user = user.user_id
-    res.render('home.ejs', { all_comments: all_comments, user: user_id });
-     
+  
+   res.redirect("/")
 })
 
 router.get("/galary", (req, res) => {
@@ -71,7 +83,7 @@ router.post("/catering/action",(req,res)=>{
 })
 
 
-//review
+//review or comment 
 
 router.get("/review/add-review", async (req, res) => {
     res.render("comment.ejs")
@@ -110,9 +122,14 @@ router.get("/cart", (req, res) => {
 
 })
 
+router.get("TargerProfile/:username", async (req,res)=>{
+    const targetUser= req.params.username
+    const currentUser=req.user.username
+    const result = await db.query("SELECT * FROM users WHERE NAME=$1",[targetUser])
+    
+    res.render("profile.ejs",{Targeteduser:result.rows[0] , currentUser})
+
+})
 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = router;

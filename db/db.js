@@ -33,8 +33,8 @@ async function addcomment(comment) {
 
 // Function to fetch all comments
 async function getcomment() {
-  const query = `select user.name,comment.comment, user.profile_pic FROM comment INNER JOIN
-    user on user.id=comment.user_id               
+  const query = `select users.name,comment.comment, users.profile_pic FROM comment INNER JOIN
+    users on users.id=comment.user_id               
 `
   try {
     const res = await db.query(query, [item]);
@@ -94,5 +94,5 @@ async function getPassword(username){
 module.exports = {
   addcomment,
   getcomment,
-  getcartitems,
+  getCartItems,
 };
