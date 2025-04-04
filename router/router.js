@@ -14,13 +14,13 @@ router.get("/", async (req, res) => {
  console.log("Route / is being hit");
 
     try {
-        const comments = await getcomment(); // Fetch comments
+        const userobj = await getcomment(); // Fetch comments
 
         console.log(comments);
-        let all_comments = comments.comment;
-        let user = comments.user_id;
-        let profile_pic = comments.profile_pic;
-        let rol 
+        let all_comments = userobj.comment;
+        let user = userobj.user_id;
+        let profile_pic = userobj.profile_pic;
+        let role=userobj.role
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {

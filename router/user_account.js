@@ -9,7 +9,8 @@ var session = require('express-session')
 app.use(express.urlencoded({ extended: true }));
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
-const { addcomment, getcomment, getCartItems, getPassword } = require('../db/db');
+const { db,addcomment, getcomment, getCartItems, getPassword } = require('../db/db');
+
 
 app.use(session({
   secret: 'keyboard cat',
@@ -107,6 +108,7 @@ router.get("/register", (req, res) => {
      res.render("register")
 })
 router.post("register/action",(req,res)=>{
+   let username = req.body.gmail
    
 
 })
