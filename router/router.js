@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
         let all_comments = comments.comment;
         let user = comments.user_id;
         let profile_pic = comments.profile_pic;
-
+        let rol 
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
@@ -123,6 +123,7 @@ router.get("/cart", (req, res) => {
 })
 
 router.get("TargerProfile/:username", async (req,res)=>{
+     
     const targetUser= req.params.username
     const currentUser=req.user.username
     const result = await db.query("SELECT * FROM users WHERE NAME=$1",[targetUser])

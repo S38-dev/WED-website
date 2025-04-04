@@ -79,13 +79,14 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
-    return cb(null, { username: username });
+    return cb(null, { username:username });
   } catch (err) {
     return cb(err);
   }
 }));
 
 passport.serializeUser(function(user,cb){
+ console.log("the value within serialize user  ",user)
   cb(null,user)
 
 })
@@ -103,9 +104,12 @@ passport.deserializeUser(function(user,cb){
 
 
 router.get("/register", (req, res) => {
-  // adiing basic local passport authetication here        
+     res.render("register")
 })
+router.post("register/action",(req,res)=>{
+   
 
+})
 
 
 module.exports= passport

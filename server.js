@@ -5,10 +5,13 @@ const app = express();
 app.set("view engine", "ejs");
 
 const router = require("./router/router"); // Import router
+app.use(express.static("public")); // Fix typo from "pubic" to "public"
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", router); // Use router 
 
 
-app.use(express.static("public")); // Fix typo from "pubic" to "public"
 
 
 
