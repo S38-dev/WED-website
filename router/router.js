@@ -5,7 +5,7 @@ const app=express()
 const multer  = require('multer')
 
 const { addcomment, getcomment,getCartItems } = require('../db/db');
-let user_id;
+let user_id ;
 
 
 //home
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
         const userobj = await getcomment(); // Fetch comments
 
         console.log(userobj);
-        let all_comments = userobj?.comment || null ;
+        let all_comments = userobj?.comment || [] ;
         let user = userobj?.user_id || "guest";
         let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
         let role=userobj?.role||"viewer"
@@ -108,7 +108,7 @@ router.post("/review/add-review",async (req,res)=>{
 
 router.get("/cart", (req, res) => {
 // using if to get to the cart.ejs 
-   res.render("cart",{cartItems:getCartItems(req.body.user_id  )})
+   res.render("cart",{cartItems:getCartItems(raq.body.user_id)})
   
 
 
