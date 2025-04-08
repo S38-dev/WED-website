@@ -1,17 +1,48 @@
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
+const session = require("express-session"); 
+const path = require('path');
+
 
 app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, 'views'));
 
-const router = require("./router/router"); // Import router
-app.use(express.static("public")); // Fix typo from "pubic" to "public"
+
+var passport = require('passport');
+
+
+ // Import router
+app.use(express.static("public"));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
+
+
+
+ // Fix typo from "pubic" to "public"
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/", router); // Use router 
+const router = require("./router/router");
+
+app.use("/" , router)
+
+// app.get('/photography', (req, res) => {
+//   res.render('photography'); // views/photography.ejs
+// });
 
 
+// app.use("/photography",router)
+//  // Use router 
+
+// app.use("photography/action",router)
 
 
 

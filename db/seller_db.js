@@ -1,22 +1,6 @@
-const pg = require('pg');
-const { Client } = pg;
+const {db} = require("./db")
 
-// PostgreSQL configuration
-const db = new Client({
-  user: 'postgres',
-  host: 'localhost',   
-  database: 'wd',
-  password: '1234',
-  port: 5432,
-});
 
-// Connect to the database
-db.connect().then(() => {
-  console.log('Connected to the database');
-}).catch(err => {
-  console.error('Database connection error:', err);
-  process.exit(1); // Exit the app if the connection fails
-});
 
 async function  editproduct(id, newtext){
    const query ="UPDATE products SET product_text = $1 WHERE product_id = $2 RETURNING *"

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            height: 50px;
+
+            padding-bottom: 2px;
+            padding-top: 0px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+
+
+
+        }
+
+        .form {
+            cursor: pointer;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 999px;
+            position: relative;
+
+
+
+        }
+        .form:hover{
+            background-color: #868585;
+        }
+
+        body {
+            margin: 0px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+
+        }
+        a:hover{
+            box-shadow: 0px  2px 5px red; /* soft glow around the link */
+  border-radius: 4px; /* optional: soft corners */
+  transition: box-shadow 0.3s ease; /* smooth transition */
+  background-color: rgba(255, 0, 0, 0.05); 
+        }
+
+        .container {
+            display: flex;
+
+
+            gap: 20px;
+            align-items: center;
+
+        }
+
+        .options {
+            position: absolute;
+            top: 100%;
+            /* places it *below* the parent */
+            left: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: none;
+            z-index: 999;
+           
+            width: 130%;
+            transition: all 0.3s ease-in-out;
+            
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 4px 4px 6px rgba(0,0,0,0.1);
+            
+           
+
+            padding:  0;
+            height: 100px;
+
+        }
+
+
+        .button {
+            height: 50%;
+            width: 100%;
+            border: 0pc;
+        }
+        .button:hover{
+            background-color: #9f9e9e;
+        }
+
+        .profile img {
+            border-radius: 100%;
+            width: 48px;
+            object-fit: cover;
+
+
+        }
+
+        .profile {
+
+
+            padding-bottom: 0px;
+        }
+
+        nav>span {
+            padding-bottom: 0px;
+            padding-top: 15PX;
+
+
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <span class="logo">Wed</span>
+
+
+        <div class="container">
+
+            <a href="/"> HOME</a>
+            <a href="">ABOUT US </a>
+            <a href="/galary">GALARY</a>
+            <a href="/cart">CART</a>
+            <a href="">ADD REVIEW</a>
+
+            <div class="form">
+                <form action="#" method="get" id="dropdown">
+                    <div class="vendores" onclick="toggleOptions()"><span>VENDORES</span></div>
+                    <div class="options" style="display:none">
+                        <button class="button photography"
+                            onclick="route('/photography','PHOTOGRAPHY')"><span>PHOTOGRAPHY </span></button>
+                        <button class="button CATERING" onclick="route('/catering','catering')"><span>CATERING</span>
+                        </button>
+
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="profile">
+                <img src="/imgs/download.jpg" alt="profile_pic">
+
+            </div>
+        </div>
+
+
+
+    </nav>
+
+
+    <script>
+        function toggleOptions() {
+
+            let options = document.querySelector('.options')
+            options.style.display = options.style.display === "flex" ? "none" : "flex";
+
+
+        }
+        function route(direct, optionName) {
+            // Submit the form to a specific route
+            const form = document.getElementById('dropdown');
+
+            document.querySelector('.vendores').innerText = optionName;
+
+
+
+
+
+            form.action = direct;
+            form.submit();
+            document.querySelector('.options').style.display = "none";
+
+        }
+        document.addEventListener("click", function (event) {
+            const options = document.querySelector('.options');
+            const vendoresBtn = document.querySelector('.vendores');
+
+            if (!options.contains(event.target) && !vendoresBtn.contains(event.target)) {
+                options.style.display = "none";
+            }
+        })
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

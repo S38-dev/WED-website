@@ -37,7 +37,8 @@ async function getcomment() {
     users on users.id=comment.user_id               
 `
   try {
-    const res = await db.query(query, [item]);
+    const res = await db.query(query);
+    
     console.log('Fetched comments:', res.rows);
     return res.rows; // Return the fetched comments
   } catch (error) {
@@ -90,10 +91,23 @@ async function getPassword(username){
 }
 
 
+async function adduser(user){
+ try{
+
+ const query="INSERT INTO users(name,age,profile_pic,gmail,password,role) values($1,$2,$3,$4,$5,$6,$7) RETURNING *  "
+ const res= await db.query(query,[user.name,user.age,user.profile_pic,user.gmail,user.password,user.role])
+  console.log("new user",res.rows)
+}catch(err){}
+ console.error('Error adding comment:', err.message);
+}
+
+
+
 // Export functions for use in other modules
 module.exports = {
   db,
   addcomment,
   getcomment,
   getCartItems,
+  adduser,
 };

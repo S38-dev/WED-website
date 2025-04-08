@@ -4,20 +4,17 @@ const router = express.Router()
 const app = express()
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const multer = require("multer");
+
 var session = require('express-session')
 app.use(express.urlencoded({ extended: true }));
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
-const { db,addcomment, getcomment, getCartItems, getPassword } = require('../db/db');
+const path = require('path');
+const upload = multer({ dest: path.join(__dirname, 'uploads') }); //multer
+app.use(express.urlencoded({ extended: true })); 
+const { db,addcomment, getcomment, getCartItems, getPassword ,adduser} = require('../db/db');
 
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
 
 
 router.get("/profile/:username", (req, res) => {
@@ -86,16 +83,7 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
   }
 }));
 
-passport.serializeUser(function(user,cb){
- console.log("the value within serialize user  ",user)
-  cb(null,user)
 
-})
-
-passport.deserializeUser(function(user,cb){
-  cb(null,user)
-  
-})
 
 
 
@@ -107,11 +95,35 @@ passport.deserializeUser(function(user,cb){
 router.get("/register", (req, res) => {
      res.render("register")
 })
-router.post("register/action",(req,res)=>{
+router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>{
    let username = req.body.gmail
-   
+  let response= await db.query("SELECT * FROM USERS WHERE gmail=$1",[username])
+  if (response.rows.length!=0){
+   return res.status(409).send("User already exists. Please log in.");
+}
+
+ else {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+     await adduser({
+    name:req.body.name,
+    gmail: req.body.gmail,
+    password: hashedPassword,
+    role: req.body.role || "buyer", // Default role if not provided
+     profile_pic: req.file ? req.file.filename : null,
+    age:req.body.age
+  });
+}
 
 })
 
+passport.serializeUser(function(user,cb){
+ console.log("the value within serialize user  ",user)
+  cb(null,user)
 
+})
+
+passport.deserializeUser(function(user,cb){
+  cb(null,user)
+  
+})
 module.exports= passport

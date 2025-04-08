@@ -2,10 +2,10 @@ const express = require("express")
 const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
+const multer  = require('multer')
 
-app.use(express.urlencoded({ extended: true })); 
 const { addcomment, getcomment,getCartItems } = require('../db/db');
-let user_id ;
+let user_id;
 
 
 //home
@@ -16,11 +16,11 @@ router.get("/", async (req, res) => {
     try {
         const userobj = await getcomment(); // Fetch comments
 
-        console.log(comments);
-        let all_comments = userobj.comment;
-        let user = userobj.user_id;
-        let profile_pic = userobj.profile_pic;
-        let role=userobj.role
+        console.log(userobj);
+        let all_comments = userobj?.comment || null ;
+        let user = userobj?.user_id || "guest";
+        let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
+        let role=userobj?.role||"viewer"
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
@@ -53,10 +53,14 @@ router.get("/galary", (req, res) => {
 
 
 router.get("/photography", (req, res) => {
+    
+       
+    const user_id = req.user ? req.user.gmial : null;
 
-    res.render('photography',{user_id })
-
-}) 
+    
+        res.render('photography', { user_id })
+    
+})
 router.post("/photography/action", (req, res) => {
 
     if (req.body.action == addcart) {
@@ -104,7 +108,7 @@ router.post("/review/add-review",async (req,res)=>{
 
 router.get("/cart", (req, res) => {
 // using if to get to the cart.ejs 
-   res.render("cart",{cartItems:getCartItems(raq.body.user_id)})
+   res.render("cart",{cartItems:getCartItems(req.body.user_id  )})
   
 
 
@@ -120,9 +124,10 @@ router.get("/cart", (req, res) => {
 
 } 
 
+
 })
 
-router.get("TargerProfile/:username", async (req,res)=>{
+router.get("TargerProfile/:username",  async (req,res)=>{
      
     const targetUser= req.params.username
     const currentUser=req.user.username
