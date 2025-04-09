@@ -5,7 +5,6 @@ const app=express()
 const multer  = require('multer')
 
 const { addcomment, getcomment,getCartItems } = require('../db/db');
-let user_id ;
 
 
 //home
@@ -73,8 +72,9 @@ router.post("/photography/action", (req, res) => {
 //catering
 
 router.get("/catering", (req, res) => {
-     
+    const user_id = req.user ? req.user.gmial : null;
     res.render('catering.ejs',{user_id})
+
 
 })
  
@@ -108,8 +108,14 @@ router.post("/review/add-review",async (req,res)=>{
 
 router.get("/cart", (req, res) => {
 // using if to get to the cart.ejs 
-   res.render("cart",{cartItems:getCartItems(raq.body.user_id)})
-  
+if (!req.isAuthenticated() || !req.user) {
+    console.log("hlw")
+    return res.redirect("/user/login"); // Or send a message, your choice.
+  }
+  else{
+   const usercart =getCartItems(req.user.gmail)||null;
+   res.render("cart",{cartItems:usercart})
+  }
 
 
 })

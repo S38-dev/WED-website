@@ -31,8 +31,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const router = require("./router/router");
-
+const user_router=require("./router/user_account");
 app.use("/" , router)
+app.use("/user",user_router)
+
 
 // app.get('/photography', (req, res) => {
 //   res.render('photography'); // views/photography.ejs

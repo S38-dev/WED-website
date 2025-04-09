@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 const path = require('path');
+const multer = require("multer");
 const upload = multer({ dest: path.join(__dirname, 'uploads') }); //multer
 app.use(express.urlencoded({ extended: true })); 
 const { db,addcomment, getcomment, getCartItems, getPassword ,adduser} = require('../db/db');
@@ -55,7 +56,7 @@ router.get("/logout", (req, res) => {
 })
 
 router.get("/login", (req, res) => {
-
+console.log("hitting login")
   res.render("login");
 
 })
@@ -126,4 +127,4 @@ passport.deserializeUser(function(user,cb){
   cb(null,user)
   
 })
-module.exports= passport
+module.exports= router;
