@@ -1,27 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inder&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inder&family=Indie+Flower&family=Inter:opsz,wght@14..32,100&display=swap"
+        rel="stylesheet">
     <title>Document</title>
+
+    <style>
+        .hero {
+            display: inline-block;
+            min-width: 914px;
+            height: 627px;
+
+
+        }
+
+        .img {
+            position: relative;
+            max-width: 914px;
+            height: 627px;
+
+        }
+
+        .brides {
+            width: 551px;
+            height: 302px;
+            position: relative;
+            left: 267px;
+            top: 11px;
+            right: 96px;
+        }
+
+        .handholding {
+            width: 192px;
+            height: 268px;
+            position: absolute;
+            left: 715px;
+            bottom: 112px;
+            top: 247px;
+
+            border-radius: 21px;
+            border: 5px solid rgba(219, 230, 236, 1);
+            box-shadow: 0px 2px 8px 1px gray;
+
+        }
+
+        .handholding:hover {
+            box-shadow: 2px 4px 20px 5px rgba(10, 175, 225, 0.55);
+        }
+
+        .text {
+            display: inline-block;
+            position: absolute;
+            left: 1197px;
+            top: 359px;
+            bottom: 605px;
+
+
+
+
+        }
+
+        h2 {
+            font-family: "Inder", sans-serif;
+            font-weight: 20;
+            font-style: normal;
+            margin-bottom: 0;
+        }
+
+        h4 {
+            font-family: "Inder", sans-serif;
+            font-weight: 40;
+            font-style: static;
+            margin-top: 4px;
+
+        }
+        .reviews.section {
+    position: absolute;
+    width: 1500px;
+    height: 200px;
+    /* border-radius: 2%; */
+    top: 884px;
+    left: 450px;
+    margin-left: auto;
+    margin-top: 200px;
+    background: linear-gradient(45deg, rgb(226 127 213 / 72%), rgba(246, 80, 80, 0.27), rgba(241, 171, 246, 0.471), rgb(197 238 219), rgb(225, 232, 184), rgb(155 190 230));
+    background-size: 400% 400%;
+    animation: floatingGradient 12s ease-in-out infinite;
+}
+@keyframes floatingGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+    </style>
 </head>
+
 <body>
-    <%- include('navbar') %>  
-    <div>
-     <div class="hero section" style="background-color: rgba(219, 230, 236, 1); ">
-       <div>
-        <img src="/imgs/bride.jpg" alt="">
+    <%- include('navbar') %>
+        <div>
+            <div class="hero section" style="background-color: rgba(246, 246, 246, 1); ">
+                <div class="img">
+                    <img class="brides" src="/imgs/bride.jpg" alt="">
 
-       </div>
-       <div>
+                </div>
+                <div>
+                    <img class="handholding" src="/imgs/hand.jpg" alt="">
 
-       </div>
-       <img src="/imgs/hand.jpg" alt="">
+                </div>
 
-      </div>
-    <div class="reviews section">
-        
-    </div>
-</div>
+
+            </div>
+            <div class="text">
+                <h2>Creating special moments</h2>
+                <h4>Start a new journey with us. </h4>
+
+            </div>
+
+            <div class="reviews section">
+                <div class="comments">
+                    //reviews
+                </div>
+
+            </div>
+        </div>
 </body>
+
 </html>

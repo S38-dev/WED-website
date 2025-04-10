@@ -52,7 +52,7 @@ router.post("/profile/edit/upload", (req, res) => {
 
 })
 router.get("/logout", (req, res) => {
-   
+  res.render("login");
 })
 
 router.get("/login", (req, res) => {
