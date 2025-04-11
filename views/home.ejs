@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -17,6 +18,19 @@
     <title>Document</title>
 
     <style>
+        .swiper {
+            width: 180vh;
+            height: 40vh;
+            background-image: url("/imgs/swiper.jpg");
+            background-color: #f7f7f5;
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* or 'contain' or specific dimensions */
+            background-position: center;
+            margin-bottom: 10px;
+
+        }
+
         .hero {
             display: inline-block;
             min-width: 914px;
@@ -139,7 +153,10 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
-            min-height: 250px;
+            max-height: 250px;
+            width: 40vh;
+            margin-top: 30px;
+            margin-left: 8px;
         }
 
         .stars {
@@ -179,8 +196,10 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             position: relative;
-            left: 1003px;
-            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            
+            margin: 0 auto;
         }
 
         .view_all:hover {
@@ -230,7 +249,7 @@
                                                 <%= review.comment||"No Comment" %>
                                             </p>
                                             <div class="review-footer">
-                                                <img src="<%=review.user_profile|| '/default-avatar.jpg' %>"
+                                                <img src="<%=review.user_profile|| '/imgs/default-avatar.jpg' %>"
                                                     class="avatar">
                                                 <div>
                                                     <h4>
@@ -256,6 +275,7 @@
 
         </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <script>
             var swiper = new Swiper(".mySwiper", {
