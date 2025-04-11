@@ -1,11 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        h1 {
+            text-align: center;
+            position: relative;
+            top: 118px;
+        }
+
+        .comment_form {
+
+            position: relative;
+            top: 197px;
+            width: 869px;
+            height: 495px;
+            left: 624px;
+            background-color: rgba(241, 241, 241, 0.67);
+
+        }
+
+        .text_field {
+            width: 713px;
+            height: 329px;
+            border: none;
+            font-size: 1rem;
+            border-radius: 8px;
+            resize: vertical;
+        }
+
+        .text_field:hover {
+            border: 3px solid rgb(17, 231, 242);
+        }
+
+        .submit_button {
+            position: absolute;
+            left: 609px;
+            top: 265px;
+            background-color: rgba(187, 250, 244, 1);
+            border: none;
+            padding: 20px;
+            border-radius: 990px;
+        }
+
+
+        .entire_comment {
+            position: absolute;
+            top: 100px;
+            left: 78px;
+        }
+    </style>
 </head>
+
 <body>
-    add comment
+    <%- include('navbar') %>
+        <h1>Leave a comment</h1>
+        <div>
+            <div>
+                <form method="post" class="comment_form" action="/review/add-review">
+                    <div class="entire_comment">
+                        <textarea placeholder="Write something about our services" class="text_field"
+                            name="comment"></textarea>
+
+                        <input type="submit" value="comment" class="submit_button">
+                    </div>
+                </form>
+            </div>
+        </div>
 </body>
+
 </html>

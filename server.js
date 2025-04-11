@@ -10,8 +10,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 var passport = require('passport');
-
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
  // Import router
 app.use(express.static("public"));
 

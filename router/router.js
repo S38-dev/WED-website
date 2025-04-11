@@ -20,10 +20,11 @@ router.get("/", async (req, res) => {
         let user = userobj?.user_id || "guest";
         let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
         let role=userobj?.role||"viewer"
+        let user_name=userobj?.name || "guest";
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
-            res.render("home.ejs", { all_comments, user, user_profile: profile_pic });
+            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name });
         }
     } catch (error) {
         console.error("Error fetching comments:", error);
@@ -94,11 +95,43 @@ router.get("/review/add-review", async (req, res) => {
 
 })
 
+
+
+
+router.get("/more_reviews",async(req,res)=>{
+    try {
+        const userobj = await getcomment(); // Fetch comments
+        console.log("more review")
+
+        console.log(userobj);
+        let all_comments = userobj?.comment || [] ;
+        let user = userobj?.user_id || "guest";
+        let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
+        let role=userobj?.role||"viewer"
+        if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
+            res.json({ all_comments, user, user_profile: profile_pic });
+        } else {
+            res.render("more_review", { all_comments, user, user_profile: profile_pic });
+        }
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}) 
+
+
+
+
+
+
+
+
 router.post("/review/add-review",async (req,res)=>{
+    if(req.body.comment){
    let comment =req.body.comment;
    // add these comments to pg database
   await addcomment(comment);
-   
+    }
   
     res.redirect('/');
 })

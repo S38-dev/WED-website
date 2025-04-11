@@ -85,25 +85,108 @@
             margin-top: 4px;
 
         }
-        .reviews.section {
-    position: absolute;
-    width: 1500px;
-    height: 200px;
-    /* border-radius: 2%; */
-    top: 884px;
-    left: 450px;
-    margin-left: auto;
-    margin-top: 200px;
-    background: linear-gradient(45deg, rgb(226 127 213 / 72%), rgba(246, 80, 80, 0.27), rgba(241, 171, 246, 0.471), rgb(197 238 219), rgb(225, 232, 184), rgb(155 190 230));
-    background-size: 400% 400%;
-    animation: floatingGradient 12s ease-in-out infinite;
-}
-@keyframes floatingGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
 
+        /* .reviews.section {
+            position: absolute;
+            width: 1500px;
+            height: 400px;
+
+            top: 884px;
+            left: 450px;
+            margin-left: auto;
+            margin-top: 200px;
+            background: linear-gradient(45deg, rgb(226 127 213 / 72%), rgba(246, 80, 80, 0.27), rgba(241, 171, 246, 0.471), rgb(197 238 219), rgb(225, 232, 184), rgb(155 190 230));
+            background-size: 400% 400%;
+            animation: floatingGradient 12s ease-in-out infinite;
+        }
+
+        @keyframes floatingGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        } */
+
+        /* .show_more{
+            position:relative;
+            top:376px;
+            left:1256px;
+            font-size: medium;
+            color:purple
+
+        } */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .section-title span {
+            color: #f74d4d;
+            border-bottom: 2px solid #f74d4d;
+        }
+
+        .review-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            min-height: 250px;
+        }
+
+        .stars {
+            color: gold;
+            font-size: 1.2rem;
+        }
+
+        .review-footer {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .avatar {
+            width: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .review-date {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .view_all {
+            background-color: #f65a5b;
+            /* similar to the red in your image */
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            left: 1003px;
+            margin-top: 10px;
+        }
+
+        .view_all:hover {
+            background-color: #e04a4b;
+            /* darker shade for hover */
+        }
     </style>
 </head>
 
@@ -129,12 +212,77 @@
             </div>
 
             <div class="reviews section">
-                <div class="comments">
-                    //reviews
+
+
+                <h2 class="section-title">What people <span>Think About Us</span></h2>
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <% if (!all_comments || all_comments.length===0) { %>
+                            <div class="review-card">
+                                <p>No comment</p>
+                            </div>
+                            <% } else { %>
+                                <% all_comments.forEach(review=> { %>
+                                    <div class="swiper-slide">
+                                        <div class="review-card">
+                                            <div class="stars">★★★★★</div>
+                                            <p>
+                                                <%= review.comment||"No Comment" %>
+                                            </p>
+                                            <div class="review-footer">
+                                                <img src="<%=review.user_profile|| '/default-avatar.jpg' %>"
+                                                    class="avatar">
+                                                <div>
+                                                    <h4>
+                                                        <%=review.user_name%>
+                                                    </h4>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% } %>
+                    </div>
                 </div>
+                <form action="/more_reviews" method="get">
+                    <input type="submit" value="View all" class="view_all">
+
+                </form>
+
 
             </div>
+
         </div>
+        </div>
+
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                loop: true,
+                autoplay: {
+                    delay: 0, // <-- No delay between slides
+                    disableOnInteraction: false,
+                },
+                speed: 4000, // <-- Controls how slow the transition is (higher = smoother)
+                slidesPerView: 2, // Or 1 for mobile
+                spaceBetween: 30,
+                allowTouchMove: false, // <-- Optional: makes it fully automatic
+                grabCursor: false,
+                freeMode: true, // <-- Enables momentum-based sliding
+                freeModeMomentum: false, // <-- Disable sudden jumps
+                breakpoints: {
+                    768: {
+                        slidesPerView: 2,
+                    },
+                    320: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
+
+
+        </script>
 </body>
 
 </html>
