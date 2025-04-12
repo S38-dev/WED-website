@@ -154,7 +154,9 @@
                 </form>
 
             </div>
-            <a href="/user/login" id="login" onclick="Showlogout()">LOGIN </a>
+            <a id="login" href="<%=activeuser? '/user/logout' : '/user/login' %>">
+                <%= activeuser? 'LOGOUT' : 'LOGIN' %>
+              </a>
 
             <div class="profile">
                 <img src="/imgs/default-avatar.jpg" alt="profile_pic">
@@ -198,13 +200,13 @@
                 options.style.display = "none";
             }
         })
-        function Showlogout(){
-            const login = document.querySelector('#login');
-            login.setAttribute("href","/user/logout");
-            login.innerHTML="LOGOUT";
+        // function Showlogout(){
+        //     const login = document.querySelector('#login');
+        //     login.setAttribute("href","/user/logout");
+        //     login.innerHTML="LOGOUT";
 
 
-        }
+        // }
 
 
 

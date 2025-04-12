@@ -33,7 +33,7 @@ async function addcomment(comment) {
 
 // Function to fetch all comments
 async function getcomment() {
-  const query = `select users.name,comment.comment, users.profile_pic ,users.role,users.name FROM comment INNER JOIN
+  const query = `select users.name,comment.comment, users.profile_pic ,users.role,users.gmail FROM comment INNER JOIN
     users on users.id=comment.user_id               
 `
   try {

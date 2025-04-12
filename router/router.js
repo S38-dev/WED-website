@@ -17,15 +17,26 @@ router.get("/", async (req, res) => {
 
         console.log(userobj);
         let all_comments = userobj?.comment || [] ;
+
         let user = userobj?.user_id || "guest";
+
         let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
         let role=userobj?.role||"viewer"
+
         let user_name=userobj?.name || "guest";
+        let user_data = req.user; // this is from passport
+       
+         let activeuser = user_data?.username ||null;
+
+
+
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
-            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name });
+            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name,activeuser });
         }
+
+
     } catch (error) {
         console.error("Error fetching comments:", error);
         res.status(500).send("Internal Server Error");

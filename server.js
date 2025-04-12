@@ -32,6 +32,10 @@ app.use(passport.session());
 
 const router = require("./router/router");
 const user_router=require("./router/user_account");
+app.use((req, res, next) => {
+  res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
+  next();
+});
 app.use("/" , router)
 app.use("/user",user_router)
 

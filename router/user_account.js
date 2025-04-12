@@ -41,6 +41,9 @@ router.get("/profile/:username/edit", (req, res) => {
     res.redirect("/login");
   }
 })
+
+
+
 router.post("/profile/edit/upload", (req, res) => {
   //adding the profile pic  file here 
    res.render("editpage")
@@ -51,9 +54,20 @@ router.post("/profile/edit/upload", (req, res) => {
   }
 
 })
+
+
+
 router.get("/logout", (req, res) => {
-  res.render("login");
-})
+ 
+
+  req.logout(() => {
+    res.redirect("/");
+  });
+});
+
+
+
+
 
 router.get("/login", (req, res) => {
   console.log("hitting login"); 
@@ -61,12 +75,20 @@ router.get("/login", (req, res) => {
   res.render("login");
 
 })
+
+
+
+
 router.post("/login/submit", passport.authenticate("local",{
    
   successRedirect: '/',
   failureRedirect: '/user/login'
 
 }))
+
+
+
+
 
 //local 
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
@@ -103,12 +125,17 @@ router.get("/register", (req, res) => {
 
 
 
+
+
+
 router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>{
    let username = req.body.gmail
   let response= await db.query("SELECT * FROM USERS WHERE gmail=$1",[username])
   if (response.rows.length!=0){
    return res.status(409).send("User already exists. Please log in.");
 }
+
+
 
  else {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -124,14 +151,27 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
 
 })
 
+
+
+
+
+
 passport.serializeUser(function(user,cb){
  console.log("the value within serialize user  ",user)
   cb(null,user)
 
 })
 
+
+
+
 passport.deserializeUser(function(user,cb){
   cb(null,user)
   
+
 })
+
+
+
+
 module.exports= router;
