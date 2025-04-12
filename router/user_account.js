@@ -56,25 +56,29 @@ router.get("/logout", (req, res) => {
 })
 
 router.get("/login", (req, res) => {
-console.log("hitting login")
+  console.log("hitting login"); 
+
   res.render("login");
 
 })
 router.post("/login/submit", passport.authenticate("local",{
-
+   
   successRedirect: '/',
-  failureRedirect: '/login'
+  failureRedirect: '/user/login'
 
 }))
 
 //local 
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
+  console.log("username : ",username);
   try {
     const hashresult = await getPassword(username);//from db
-    if (hashresult.rows.length === 0) {
+    console.log("hashreasult ", hashresult)
+    if (hashresult.length === 0) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
-    const isMatch = await bcrypt.compare(password, hashresult.rows[0].password);
+    // const isMatch = await bcrypt.compare(password, hashresult.rows[0].password);
+    const isMatch=password==hashresult[0].password;
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
@@ -96,6 +100,9 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
 router.get("/register", (req, res) => {
      res.render("register")
 })
+
+
+
 router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>{
    let username = req.body.gmail
   let response= await db.query("SELECT * FROM USERS WHERE gmail=$1",[username])

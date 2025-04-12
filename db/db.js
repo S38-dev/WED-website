@@ -72,14 +72,18 @@ WHERE cart.user_id = $1;`;
 
 
 
+
 async function addcartitem(product){
 // adding cart product here
    
 }
 async function getPassword(username){
+  console.log("hitting  get password")
+  console.log("Looking for username (gmail):", username);
   try {
    const query="Select password from users where  gmail = $1 "
     const res = await db.query(query,[username]);
+    
     console.log('Fetched comments:', res.rows);
     return res.rows;  
 
@@ -109,5 +113,7 @@ module.exports = {
   addcomment,
   getcomment,
   getCartItems,
+  getPassword,
   adduser,
+  
 };

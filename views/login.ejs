@@ -4,9 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>login</title>
 </head>
 <body>
-    login
+    <div>
+        <div class="login">
+            <form action="/user/login/submit" method="post" class="login_form">
+                <input type="text" id="username" name="username">
+                <input type="text" id="password" name="password">
+                <input type="submit" class="login_button">
+
+
+
+            </form>
+            <a href=""class="forget_password">FORGOT PASSWORD</a>
+
+
+            <form action="/user/register" method="get" class="register">
+                <input type="submit" class="register_button">
+            </form>
+
+        </div>
+    </div>
 </body>
 </html>
