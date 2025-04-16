@@ -1,11 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <title>Wed</title>
+    <style>
+        .swiper {
+            width: 100%;
+            height: 550px;
+        }
+
+        .swiper-slide {
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .text {
+            text-align: center;
+        }
+
+        .filter {
+            position: relative;
+            background-color: blue;
+            height: 60px;
+            width: 300px;
+            position: relative;
+            top: 70px;
+            margin: 0 auto;
+            border-radius: 10px;
+            text-align: center;
+            background-color: transparent;
+            border: 1px solid black;
+            padding-top: 10px;
+            z-index: 0;
+            cursor: pointer;
+            overflow: hidden;
+
+        }
+
+        .filter span {
+            font-size: 50px;
+
+            color: rgb(0, 0, 0);
+
+
+        }
+
+        .filter::before {
+            content: "";
+            background-color: black;
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            z-index: -1;
+
+        }
+
+        .filter:hover::before {
+            width: 150%;
+            height: 300%;
+        }
+
+        .filter:hover span {
+            color: white;
+        }
+
+        .filter_options {
+            position: relative;
+
+            left: 1105px;
+            top: 78px;
+            width: fit-content;
+        }
+
+
+
+
+
+        .filter_radio {
+            display: inline-block;
+            /* or block */
+            height: 50px;
+            width: 200px;
+            border: 1px solid black;
+            border-radius: 10px;
+            margin: 5px;
+            text-align: center;
+            padding-top: 20px;
+            z-index: 1;
+
+
+        }
+
+
+
+
+        .items_container {
+            display: grid;
+            margin-top: 250px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product_card {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            background-color: white;
+            width: 300px;
+        }
+
+        .product_card:hover {
+            transform: scale(1.02);
+        }
+
+        .product_image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .product_info {
+            padding: 15px;
+        }
+
+        .product_name {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .product_price {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
-   photo 
+
+    <div class="swiper product_swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">Slide 1</div>
+
+            <div class="swiper-slide">Slide 2</div>
+
+            <div class="swiper-slide">Slide 3</div>
+
+        </div>
+    </div>
+
+    <h1 class="text"> A Picture Can Make You Feel Your Special Day Again</h1>
+
+
+
+
+
+    <div class="filter" onclick="filter()">
+        <span>Filter</span>
+
+
+    </div>
+    <div class="filter_options" style="display: none;">
+        <form action="" method="get" id="filter_form">
+            <!-- <input type="radio" id="1000-2000"  name="filter_value" value="2000">
+                <label for="1000-2000" class="filter_radio">1000-2000</label><br>
+
+                <input type="radio" id="2000-3000" name="filter_value"   value="3000">
+                <label for="2000-3000"class="filter_radio">2000-3000</label><br>
+
+                <input type="radio" id="3000-4000" name="filter_value" value="4000">
+                <label for="3000-4000"class="filter_radio">3000-4000</label><br>
+                
+                <input type="radio" id="4000-5000" name="filter_value"   value="5000">
+                <label for="4000-5000"class="filter_radio">4000-5000</label><br> -->
+
+            <label for="filter_value" class="filter_range">Set your Price <span class="price"> 0 </span></label><br>
+
+            <input type="range" name="filter_value" id="filter_value" min="0" max="3000" value="0" step="1000">
+
+
+
+        </form>
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+    <div class="items_container">
+        <% result.forEach(product=> { %>
+            <div class="product_card">
+                <img src="<%= product.product_pic %>" alt="<%= product.product_name %>" class="product_image" />
+
+                <div class="product_info">
+                    <h3 class="product_name">
+                        <%= product.product_name %>
+                    </h3>
+                    <p class="product_text">
+                        <%= product.product_text %>
+                    </p>
+                    <p class="product_price">₹ <%= product.product_price %>
+                    </p>
+                    <p class="seller_id">Seller ID: <%= product.seller_id %>
+                    </p>
+                    <p class="product_type">
+                        <%= product.product_type %>
+                    </p>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <script>
+        var swiper = new Swiper(".product_swiper", {
+            loop: true,
+            autoplay: {
+                delay: 1, // <-- No delay between slides
+                disableOnInteraction: false,
+            },
+            speed: 10000, // <-- Controls how slow the transition is (higher = smoother)
+            slidesPerView: 1, // Or 1 for mobile
+            spaceBetween: 30,
+            allowTouchMove: false, // <-- Optional: makes it fully automatic
+            grabCursor: false,
+
+
+
+
+        });
+
+        function filter() {
+            document.querySelector(".filter_options").style.display = "block";
+        }
+
+
+        let range = document.querySelector("#filter_value");
+
+
+
+        range.addEventListener("input", async (event) => {
+            const range = document.getElementById("filter_value");
+            const priceSpan = document.querySelector(".price");
+
+
+            const value = parseInt(range.value);
+            priceSpan.innerHTML = value;
+
+
+
+
+            // const formData = new FormData();
+            // formData.append("value", value);
+            const response = await fetch("/photograpgy/filter", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ value })
+            });
+            const data = await response.json();
+            updateFilteredItems(data);
+        });
+
+
+
+        function updateFilteredItems(items) {
+            const container = document.querySelector(".items_container"); // wherever you're listing the items
+            container.innerHTML = ""; // clear previous results
+
+            items.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("item_card");
+                itemDiv.innerHTML = `
+            <img src="${item.product_pic}" />
+            <h3>${item.product_name}</h3>
+            <p>Price: ₹${item.product_price}</p>
+        `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
 </body>
+
 </html>

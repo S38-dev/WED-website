@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
     <style>
         .nav {
             display: flex;
@@ -17,7 +19,7 @@
 
             padding-bottom: 2px;
             padding-top: 0px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding-right: 20px;
             padding-left: 10px;
 
@@ -36,7 +38,8 @@
 
 
         }
-        .form:hover{
+
+        .form:hover {
             background-color: #868585;
         }
 
@@ -50,11 +53,15 @@
             text-decoration: none;
 
         }
-        a:hover{
-            box-shadow: 0px  2px 5px red; /* soft glow around the link */
-  border-radius: 4px; /* optional: soft corners */
-  transition: box-shadow 0.3s ease; /* smooth transition */
-  background-color: rgba(255, 0, 0, 0.05); 
+
+        a:hover {
+            box-shadow: 0px 2px 5px red;
+            /* soft glow around the link */
+            border-radius: 4px;
+            /* optional: soft corners */
+            transition: box-shadow 0.3s ease;
+            /* smooth transition */
+            background-color: rgba(255, 0, 0, 0.05);
         }
 
         .container {
@@ -75,18 +82,18 @@
             border: 1px solid #ccc;
             display: none;
             z-index: 999;
-           
+
             width: 130%;
             transition: all 0.3s ease-in-out;
-            
+
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 4px 4px 6px rgba(0,0,0,0.1);
-            
-           
+            box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.1);
 
-            padding:  0;
+
+
+            padding: 0;
             height: 100px;
 
         }
@@ -97,13 +104,15 @@
             width: 100%;
             border: 0pc;
         }
-        .button:hover{
+
+        .button:hover {
             background-color: #9f9e9e;
         }
 
         .profile img {
             border-radius: 100%;
-            width: 48px;
+           width: 48px;
+            height:48px;
             object-fit: cover;
 
 
@@ -121,8 +130,6 @@
 
 
         }
-
-        
     </style>
 </head>
 
@@ -156,11 +163,25 @@
             </div>
             <a id="login" href="<%=activeuser? '/user/logout' : '/user/login' %>">
                 <%= activeuser? 'LOGOUT' : 'LOGIN' %>
-              </a>
+            </a>
 
             <div class="profile">
-                <img src="/imgs/default-avatar.jpg" alt="profile_pic">
-
+                <% if (activeuser) { %>
+                  <div class="profile">
+                    <a href="/user/profile/<%= activeuser %>">
+                      <!-- Use the Active_profile_pic if available, otherwise default to '/imgs/default-avatar.jpg' -->
+                      <img src="<%= Active_profile_pic || '/imgs/default-avatar.jpg' %>" alt="profile_pic">
+                    </a>
+                  </div>
+                <% } else { %>
+                  <div class="profile">
+                    <a href="/user/login">
+                      <!-- For not logged in users, always use the default image -->
+                      <img src="/imgs/default-avatar.jpg" alt="profile">
+                    </a>
+                  </div>
+                <% } %>
+              </div>
             </div>
         </div>
 

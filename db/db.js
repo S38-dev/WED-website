@@ -107,6 +107,57 @@ async function adduser(user){
 
 
 
+
+
+
+
+
+
+async function getProduct(type) {
+  try {
+    const query = "SELECT * FROM products WHERE product_type=$1"; // fetch all products
+    const res = await db.query(query, [type]);
+    console.log("Products are:", res.rows); // .rows gives actual data
+    return res.rows;
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+  }
+}
+
+
+
+
+async function getfilteredproduct(value){
+  try {
+    const query = "SELECT * FROM products WHERE product_price <=$1"; // fetch all products
+    const res = await db.query(query, [value]);
+    console.log("Products are:", res.rows); // .rows gives actual data
+    return res.rows;
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+  }
+}
+
+
+async function addprofilepic(path , gmail){
+    try{
+      const query= "UPDATE users SET profile_pic=$1 where gmail=$2 "
+      const res =await db.query(query,[path,gmail])
+      console.log(" done submitting the profile pic ")
+
+    }catch(err){
+      console.log("error while uploading the image ",err)
+
+    }
+}
+
+const getUserProfilePic = async (username) => {
+  console.log("the getuserprfoile pic is hitting")
+  const result = await db.query("SELECT profile_pic FROM users WHERE gmail = $1", [username]);
+  console.log("profile pic getting ",result.rows[0])
+  return result.rows[0]?.profile_pic || null;
+};
+
 // Export functions for use in other modules
 module.exports = {
   db,
@@ -115,5 +166,8 @@ module.exports = {
   getCartItems,
   getPassword,
   adduser,
-  
+  getProduct,
+  getfilteredproduct,
+  addprofilepic,
+  getUserProfilePic,
 };

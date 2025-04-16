@@ -17,13 +17,15 @@ app.use(express.static("public"));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/uploads', express.static(path.join(__dirname, 'router/uploads')));
+process.setMaxListeners(20); 
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
 }))
-
+ 
 
 
  // Fix typo from "pubic" to "public"
@@ -36,6 +38,15 @@ app.use((req, res, next) => {
   res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
   next();
 });
+app.use((req, res, next) => {
+  if (req.isAuthenticated() && req.user && req.user.profilephoto) {
+    res.locals.Active_profile_pic = "/uploads/" + req.user.profilephoto;
+  } else {
+    res.locals.Active_profile_pic = "/imgs/default-avatar.jpg";
+  }
+  next();
+});
+
 app.use("/" , router)
 app.use("/user",user_router)
 

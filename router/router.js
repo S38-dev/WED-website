@@ -3,8 +3,8 @@ const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
 const multer  = require('multer')
-
-const { addcomment, getcomment,getCartItems } = require('../db/db');
+const nodemailer = require('nodemailer');
+const { addcomment, getcomment,getCartItems, getProduct,getfilteredproduct,getUserProfilePic } = require('../db/db');
 
 
 //home
@@ -13,9 +13,10 @@ router.get("/", async (req, res) => {
  console.log("Route / is being hit");
 
     try {
+        let Active_profile_pic ;
         const userobj = await getcomment(); // Fetch comments
 
-        console.log(userobj);
+        console.log("comments in home " ,userobj);
         let all_comments = userobj?.comment || [] ;
 
         let user = userobj?.user_id || "guest";
@@ -27,13 +28,29 @@ router.get("/", async (req, res) => {
         let user_data = req.user; // this is from passport
        
          let activeuser = user_data?.username ||null;
+         console.log("active user ", activeuser)
+
+         if(activeuser){ 
+            const pic = await getUserProfilePic(activeuser);
+            if (pic) 
+                {
+                    console.log("pic is getting ",pic)
+                    Active_profile_pic = "/uploads/" + pic;
+                }
+         }
 
 
+        
+       
+
+
+
+        
 
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
-            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name,activeuser });
+            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name,activeuser, Active_profile_pic :Active_profile_pic  });
         }
 
 
@@ -63,15 +80,17 @@ router.get("/galary", (req, res) => {
 //photography
 
 
-router.get("/photography", (req, res) => {
+router.get("/photography", async(req, res) => {
     
        
-    const user_id = req.user ? req.user.gmial : null;
+    const result = await getProduct("photography");
 
     
-        res.render('photography', { user_id })
+    res.render('photography',{result:result})
     
 })
+
+
 router.post("/photography/action", (req, res) => {
 
     if (req.body.action == addcart) {
@@ -96,6 +115,12 @@ router.post("/catering/action",(req,res)=>{
    
 }
 
+})
+
+
+router.post("/photograpgy/filter",(req,res)=>{
+    getfilteredproduct(req.body.value)
+    
 })
 
 
@@ -183,9 +208,14 @@ router.get("TargerProfile/:username",  async (req,res)=>{
     const currentUser=req.user.username
     const result = await db.query("SELECT * FROM users WHERE NAME=$1",[targetUser])
     
-    res.render("profile.ejs",{Targeteduser:result.rows[0] , currentUser})
+    res.render("profile",{Targeteduser:result.rows[0] , currentUser})
 
 })
+
+
+
+// Mock user DB
+
 
 
 module.exports = router;

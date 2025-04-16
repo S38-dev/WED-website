@@ -1,10 +1,20 @@
-
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
+    <style>
+        /* Base Reset */
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+
+
+
+
+    </style>
 </head>
 <body>
     <div>
@@ -21,10 +31,170 @@
 
 
             <form action="/user/register" method="get" class="register">
-                <input type="submit" class="register_button">
+                <input type="submit" class="register_button" value="Register">
             </form>
 
         </div>
     </div>
+
+
+
+
+
+
+
+   
 </body>
-</html>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0a0a0a;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            position: relative;
+            width: 400px;
+            padding: 40px;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(0deg,transparent, #ff3c7d, #ff3c7d);
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+        }
+
+        .login-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(0deg,transparent, #0ff, #0ff);
+            transform-origin: bottom right;
+            animation: animate 6s linear infinite;
+            animation-delay: -3s;
+        }
+
+        @keyframes animate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form {
+            position: relative;
+            z-index: 1;
+            background: #111;
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        input:focus {
+            background: #333;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ff3c7d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #ff2a6d;
+        }
+
+        .links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .links a:hover {
+            color: #0ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="form">
+            <h2>Login</h2>
+            <form action="/user/login/submit" method="post">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password"  name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+                <div class="links">
+                    <a href="/forgot-password?username=example@email.com">Forgot Password?</a>
+                    <a href="/user/register">Sign Up</a>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</body>
+</html> 

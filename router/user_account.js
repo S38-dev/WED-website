@@ -11,16 +11,30 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 const path = require('path');
 const multer = require("multer");
+
+
+
+
 const upload = multer({ dest: path.join(__dirname, 'uploads') }); //multer
-app.use(express.urlencoded({ extended: true })); 
-const { db,addcomment, getcomment, getCartItems, getPassword ,adduser} = require('../db/db');
+
+app.use(express.urlencoded({ extended: true }));
 
 
+const { db,addcomment, getcomment, getCartItems, getPassword ,adduser,addprofilepic,getUserProfilePic} = require('../db/db');
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.status(401).json({ message: "Unauthorized" });
+}
 
 
 router.get("/profile/:username", (req, res) => {
+  console.log("Authenticated?", req.isAuthenticated());
+  console.log("User:", req.user);
   if (req.isAuthenticated()){
-    res.render('profile.ejs');
+    res.render('profile');
   } else {
     res.redirect("/login");
   }
@@ -43,14 +57,18 @@ router.get("/profile/:username/edit", (req, res) => {
 })
 
 
-
-router.post("/profile/edit/upload", (req, res) => {
+router.post("/profile/edit/upload",ensureAuthenticated, upload.single('profile_pic'), (req, res) => {
   //adding the profile pic  file here 
-   res.render("editpage")
-  if (req.isAuthenticated()) {
-    res.render("updload_profile")
-  } else {
-    res.redirect("/login");
+   console.log("profile route is hitting uploaded file....",req.file)
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ message: "No file uploaded." });
+  }
+ else {
+  console.log("req user is working here:",req.user.username)
+   addprofilepic(file.filename, req.user.username );
+  res.json({ message: "Upload successful", redirectUrl: "/" });
   }
 
 })
@@ -95,6 +113,7 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
   console.log("username : ",username);
   try {
     const hashresult = await getPassword(username);//from db
+   
     console.log("hashreasult ", hashresult)
     if (hashresult.length === 0) {
       return cb(null, false, { message: "Incorrect username or password." });
@@ -104,7 +123,8 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
-    return cb(null, { username:username });
+    const profilephoto=await getUserProfilePic(username);
+    return cb(null, { username:username ,profilephoto:profilephoto});
   } catch (err) {
     return cb(err);
   }
