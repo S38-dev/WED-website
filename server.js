@@ -3,7 +3,7 @@ const ejs = require("ejs");
 const app = express();
 const session = require("express-session"); 
 const path = require('path');
-
+const{getUserProfilePic,}=require('./db/db')
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -38,15 +38,20 @@ app.use((req, res, next) => {
   res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
   next();
 });
-app.use((req, res, next) => {
-  if (req.isAuthenticated() && req.user && req.user.profilephoto) {
-    res.locals.Active_profile_pic = "/uploads/" + req.user.profilephoto;
+app.use(async (req, res, next) => {
+  if (req.isAuthenticated() && req.user && req.user.username) {
+    try {
+      const pic = await getUserProfilePic(req.user.username);
+      res.locals.Active_profile_pic = pic ? "/uploads/" + pic : "/imgs/default-avatar.jpg";
+    } catch (error) {
+      console.error("Error fetching profile pic in middleware:", error);
+      res.locals.Active_profile_pic = "/imgs/default-avatar.jpg";
+    }
   } else {
     res.locals.Active_profile_pic = "/imgs/default-avatar.jpg";
   }
   next();
 });
-
 app.use("/" , router)
 app.use("/user",user_router)
 
