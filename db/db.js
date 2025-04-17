@@ -130,7 +130,7 @@ async function getProduct(type) {
 async function getfilteredproduct(value){
   try {
     const query = "SELECT * FROM products WHERE product_price <=$1"; // fetch all products
-    const res = await db.query(query, [value]);
+    const res = await db.query(query, [value+500]);
     console.log("Products are:", res.rows); // .rows gives actual data
     return res.rows;
   } catch (error) {

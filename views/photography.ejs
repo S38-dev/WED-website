@@ -108,8 +108,8 @@
         .items_container {
             display: grid;
             margin-top: 250px;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(5, minmax(250px, 1fr));
+            gap: 10px;
             padding: 20px;
         }
 
@@ -151,34 +151,35 @@
 </head>
 
 <body>
+    <%- include('navbar') %>
 
-    <div class="swiper product_swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">Slide 1</div>
+        <div class="swiper product_swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">Slide 1</div>
 
-            <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 2</div>
 
-            <div class="swiper-slide">Slide 3</div>
+                <div class="swiper-slide">Slide 3</div>
+
+            </div>
+        </div>
+
+        <h1 class="text"> A Picture Can Make You Feel Your Special Day Again</h1>
+
+
+
+
+
+        <div class="filter" onclick="filter()">
+            <span>Filter</span>
+
 
         </div>
-    </div>
-
-    <h1 class="text"> A Picture Can Make You Feel Your Special Day Again</h1>
-
-
-
-
-
-    <div class="filter" onclick="filter()">
-        <span>Filter</span>
-
-
-    </div>
-    <div class="filter_options" style="display: none;">
-        <form action="" method="get" id="filter_form">
-            <!-- <input type="radio" id="1000-2000"  name="filter_value" value="2000">
+        <div class="filter_options" style="display: none;">
+            <form action="" method="get" id="filter_form">
+                <!-- <input type="radio" id="1000-2000"  name="filter_value" value="2000">
                 <label for="1000-2000" class="filter_radio">1000-2000</label><br>
 
                 <input type="radio" id="2000-3000" name="filter_value"   value="3000">
@@ -190,15 +191,13 @@
                 <input type="radio" id="4000-5000" name="filter_value"   value="5000">
                 <label for="4000-5000"class="filter_radio">4000-5000</label><br> -->
 
-            <label for="filter_value" class="filter_range">Set your Price <span class="price"> 0 </span></label><br>
+                <label for="filter_value" class="filter_range">Set your Price <span class="price"> 0 </span></label><br>
 
-            <input type="range" name="filter_value" id="filter_value" min="0" max="3000" value="0" step="1000">
-
-
-
-        </form>
+                <input type="range" name="filter_value" id="filter_value" min="0" max="3000" value="0" step="1000">
 
 
+
+            </form>
 
 
 
@@ -208,107 +207,123 @@
 
 
 
-    </div>
+
+
+        </div>
 
 
 
 
-    <div class="items_container">
-        <% result.forEach(product=> { %>
-            <div class="product_card">
-                <img src="<%= product.product_pic %>" alt="<%= product.product_name %>" class="product_image" />
+        <div class="items_container">
+            <% result.forEach(product=> { %>
+                <a href="/product_details">
+                    <div class="product_card">
+                        <img src="<%= product.product_pic %>" alt="<%= product.product_name %>" class="product_image" />
 
-                <div class="product_info">
-                    <h3 class="product_name">
-                        <%= product.product_name %>
-                    </h3>
-                    <p class="product_text">
-                        <%= product.product_text %>
-                    </p>
-                    <p class="product_price">₹ <%= product.product_price %>
-                    </p>
-                    <p class="seller_id">Seller ID: <%= product.seller_id %>
-                    </p>
-                    <p class="product_type">
-                        <%= product.product_type %>
-                    </p>
-                </div>
-            </div>
-            <% }) %>
-    </div>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
-    <script>
-        var swiper = new Swiper(".product_swiper", {
-            loop: true,
-            autoplay: {
-                delay: 1, // <-- No delay between slides
-                disableOnInteraction: false,
-            },
-            speed: 10000, // <-- Controls how slow the transition is (higher = smoother)
-            slidesPerView: 1, // Or 1 for mobile
-            spaceBetween: 30,
-            allowTouchMove: false, // <-- Optional: makes it fully automatic
-            grabCursor: false,
+                        <div class="product_info">
+                            <h3 class="product_name">
+                                <%= product.product_name %>
+                            </h3>
+                            <p class="product_text">
+                                <%= product.product_text %>
+                            </p>
+                            <p class="product_price">₹ <%= product.product_price %>
+                            </p>
+                            <p class="seller_id">Seller ID: <%= product.seller_id %>
+                            </p>
+                            <p class="product_type">
+                                <%= product.product_type %>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                <% }) %>
+        </div>
 
 
 
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-        });
-
-        function filter() {
-            document.querySelector(".filter_options").style.display = "block";
-        }
-
-
-        let range = document.querySelector("#filter_value");
-
-
-
-        range.addEventListener("input", async (event) => {
-            const range = document.getElementById("filter_value");
-            const priceSpan = document.querySelector(".price");
-
-
-            const value = parseInt(range.value);
-            priceSpan.innerHTML = value;
-
-
-
-
-            // const formData = new FormData();
-            // formData.append("value", value);
-            const response = await fetch("/photograpgy/filter", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
+        <script>
+            var swiper = new Swiper(".product_swiper", {
+                loop: true,
+                autoplay: {
+                    delay: 1, // <-- No delay between slides
+                    disableOnInteraction: false,
                 },
-                body: JSON.stringify({ value })
+                speed: 10000, // <-- Controls how slow the transition is (higher = smoother)
+                slidesPerView: 1, // Or 1 for mobile
+                spaceBetween: 30,
+                allowTouchMove: false, // <-- Optional: makes it fully automatic
+                grabCursor: false,
+
+
+
+
             });
-            const data = await response.json();
-            updateFilteredItems(data);
-        });
+
+            function filter() {
+                document.querySelector(".filter_options").style.display = "block";
+            }
+
+
+            let range = document.querySelector("#filter_value");
 
 
 
-        function updateFilteredItems(items) {
-            const container = document.querySelector(".items_container"); // wherever you're listing the items
-            container.innerHTML = ""; // clear previous results
+            range.addEventListener("input", async (event) => {
+                const range = document.getElementById("filter_value");
+                const priceSpan = document.querySelector(".price");
 
-            items.forEach(item => {
-                const itemDiv = document.createElement("div");
-                itemDiv.classList.add("item_card");
-                itemDiv.innerHTML = `
-            <img src="${item.product_pic}" />
-            <h3>${item.product_name}</h3>
-            <p>Price: ₹${item.product_price}</p>
+
+                const value = parseInt(range.value);
+                priceSpan.innerHTML = value;
+
+
+
+
+                // const formData = new FormData();
+                // formData.append("value", value);
+                const response = await fetch("/photography/filter", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ value })
+                });
+                const data = await response.json();
+                console.log("objcomming for server ", data.result)
+                updateFilteredItems(data.result);
+            });
+
+
+
+            function updateFilteredItems(items) {
+                const container = document.querySelector(".items_container");
+                container.innerHTML = ""; // Clear previous results
+
+                items.forEach(item => {
+                    const anchor = document.createElement("a");
+                    anchor.href = "/product_details";
+
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("product_card");
+
+                    itemDiv.innerHTML = `
+            <img src="${item.product_pic}" alt="${item.product_name}" class="product_image" />
+            <div class="product_info">
+                <h3 class="product_name">${item.product_name}</h3>
+                <p class="product_text">${item.product_text}</p>
+                <p class="product_price">₹ ${item.product_price}</p>
+                <p class="seller_id">Seller ID: ${item.seller_id}</p>
+                <p class="product_type">${item.product_type}</p>
+            </div>
         `;
-                container.appendChild(itemDiv);
-            });
-        }
+
+                    anchor.appendChild(itemDiv);
+                    container.appendChild(anchor);
+                });
+            }
 
 
 
@@ -329,7 +344,7 @@
 
 
 
-    </script>
+        </script>
 </body>
 
 </html>

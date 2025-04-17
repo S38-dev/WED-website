@@ -84,6 +84,7 @@ router.get("/photography", async(req, res) => {
     
        
     const result = await getProduct("photography");
+    
 
     
     res.render('photography',{result:result})
@@ -118,10 +119,17 @@ router.post("/catering/action",(req,res)=>{
 })
 
 
-router.post("/photograpgy/filter",(req,res)=>{
-    getfilteredproduct(req.body.value)
-    
-})
+router.post("/photography/filter", async (req, res) => {
+    try {
+      const result = await getfilteredproduct(req.body.value); // assume async
+      console.log("result from db ",result)
+      res.json({ result:result }); // sends a JSON object with the result
+    } catch (error) {
+      console.error("Error filtering products:", error);
+      res.status(500).json({ error: "Something went wrong." });
+    }
+  });
+  
 
 
 //review or comment 
@@ -209,6 +217,16 @@ router.get("TargerProfile/:username",  async (req,res)=>{
     const result = await db.query("SELECT * FROM users WHERE NAME=$1",[targetUser])
     
     res.render("profile",{Targeteduser:result.rows[0] , currentUser})
+
+})
+
+
+
+router.get ("/product_details/:product_id", async (res,req)=>{
+    const id = req.params.product_id;
+    const productimgs= await db.query("SELECT * FROM product-img WHERE product_id =$1",[id])
+    console.log("the ptoduct that is being clicked ",product)
+    res.render("product_detail",{productimgs:productimgs})
 
 })
 
