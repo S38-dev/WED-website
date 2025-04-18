@@ -3,8 +3,9 @@ const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
 const multer  = require('multer')
+
 const nodemailer = require('nodemailer');
-const { addcomment, getcomment,getCartItems, getProduct,getfilteredproduct,getUserProfilePic } = require('../db/db');
+const { db,addcomment, getcomment,getCartItems, getProduct,getfilteredproduct,getUserProfilePic } = require('../db/db');
 
 
 //home
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
         let user = userobj?.user_id || "guest";
 
         let profile_pic = userobj ?.profile_pic ||"../public/imgs/default.png";
-        let role=userobj?.role||"viewer"
+        
 
         let user_name=userobj?.name || "guest";
         let user_data = req.user; // this is from passport
@@ -38,6 +39,8 @@ router.get("/", async (req, res) => {
                     Active_profile_pic = "/uploads/" + pic;
                 }
          }
+         const user_role = res.locals.user_role || "guest";
+         console.log("userrole in home page ",user_role)
 
 
         
@@ -50,7 +53,7 @@ router.get("/", async (req, res) => {
         if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
             res.json({ all_comments, user, user_profile: profile_pic });
         } else {
-            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name,activeuser, Active_profile_pic :Active_profile_pic  });
+            res.render("home.ejs", { all_comments, user, user_profile: profile_pic,user_name,activeuser, Active_profile_pic :Active_profile_pic ,user_role });
         }
 
 
@@ -222,11 +225,12 @@ router.get("TargerProfile/:username",  async (req,res)=>{
 
 
 
-router.get ("/product_details/:product_id", async (res,req)=>{
+router.get ("/product_details/:product_id", async (req,res)=>{
+    
     const id = req.params.product_id;
-    const productimgs= await db.query("SELECT * FROM product-img WHERE product_id =$1",[id])
-    console.log("the ptoduct that is being clicked ",product)
-    res.render("product_detail",{productimgs:productimgs})
+    const productimgs= await db.query("SELECT * FROM products INNER JOIN product_img ON product_img.product_id=products.product_id  WHERE products.product_id =$1",[id])
+    console.log("the ptoduct that is being clicked ",productimgs)
+    res.render("product_details",{imgs:productimgs.rows})
 
 })
 

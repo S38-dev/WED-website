@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <header>
+        
+    </header>
+    <main>
+        <%- include('navbar') %>
+        <section>
+           
+            <div class="image_section">
+                <img id="front_img"src="<%= imgs.length > 0 ? imgs[0] : '' %>" alt="">
+
+
+                <div class="multiple_imgs">
+                    <% if (imgs && imgs.length > 0) { %>
+                        <% imgs.forEach((img) => { %>
+                            <div class="all_imgs">
+                                <img src="<%= img %>" onclick="changeimg('<%= img %>')" alt="Thumbnail of product">
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No images available.</p>
+                    <% } %>
+
+                </div>
+            </div>
+            <div class="product-spec">
+                
+
+                <div class="info">
+
+                </div>
+
+
+
+                
+                <div class="add-cart"> </div>
+
+
+            </div>
+
+            
+          
+        </section>
+    </main>
+   <script>
+    function changeimg(path){
+        document.getElementById('front_img').src=path;
+
+    }
+    </script>
+</body>
+</html>

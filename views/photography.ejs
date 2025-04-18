@@ -216,7 +216,7 @@
 
         <div class="items_container">
             <% result.forEach(product=> { %>
-                <a href="/product_details">
+                <a href="/product_details/<%=product.product_id %>">
                     <div class="product_card">
                         <img src="<%= product.product_pic %>" alt="<%= product.product_name %>" class="product_image" />
 
@@ -304,7 +304,7 @@
 
                 items.forEach(item => {
                     const anchor = document.createElement("a");
-                    anchor.href = "/product_details";
+                    anchor.href = `/product_details/${item.product_id}`;
 
                     const itemDiv = document.createElement("div");
                     itemDiv.classList.add("product_card");

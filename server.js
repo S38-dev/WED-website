@@ -3,7 +3,7 @@ const ejs = require("ejs");
 const app = express();
 const session = require("express-session"); 
 const path = require('path');
-const{getUserProfilePic,}=require('./db/db')
+const{getUserProfilePic,getUser}=require('./db/db')//db
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +38,8 @@ app.use((req, res, next) => {
   res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
   next();
 });
+
+
 app.use(async (req, res, next) => {
   if (req.isAuthenticated() && req.user && req.user.username) {
     try {
@@ -52,6 +54,25 @@ app.use(async (req, res, next) => {
   }
   next();
 });
+
+app.use(async (req, res, next) => {
+  if (req.isAuthenticated() && req.user && req.user.username) {
+    try {
+      const user= await getUser(req.user.username);
+      console.log("user getting from getuser",user)
+      res.locals.user_role = user ?user.role:"guest";
+    } catch (error) {
+      console.error("Error getting user in middleware:", error);
+      
+    }
+  } 
+  next();
+});
+
+
+
+
+
 app.use("/" , router)
 app.use("/user",user_router)
 

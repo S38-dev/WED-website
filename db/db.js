@@ -98,11 +98,11 @@ async function getPassword(username){
 async function adduser(user){
  try{
 
- const query="INSERT INTO users(name,age,profile_pic,gmail,password,role) values($1,$2,$3,$4,$5,$6,$7) RETURNING *  "
+ const query="INSERT INTO users(name,age,profile_pic,gmail,password,role) values($1,$2,$3,$4,$5,$6) RETURNING *  "
  const res= await db.query(query,[user.name,user.age,user.profile_pic,user.gmail,user.password,user.role])
   console.log("new user",res.rows)
-}catch(err){}
- console.error('Error adding comment:', err.message);
+}catch(err){console.error('Error adding user/seller:', err.message);}
+ 
 }
 
 
@@ -158,6 +158,14 @@ const getUserProfilePic = async (username) => {
   return result.rows[0]?.profile_pic || null;
 };
 
+
+async function getUser(gmail){
+  console.log("gmail in get usr ",gmail)
+  const result = await db.query("SELECT * FROM users WHERE gmail = $1", [gmail]);
+  console.log("user is  getting ",result.rows[0]);
+  return result.rows[0]||"guest";
+}
+
 // Export functions for use in other modules
 module.exports = {
   db,
@@ -170,4 +178,5 @@ module.exports = {
   getfilteredproduct,
   addprofilepic,
   getUserProfilePic,
+  getUser,
 };

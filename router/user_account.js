@@ -118,8 +118,9 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     if (hashresult.length === 0) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
-    // const isMatch = await bcrypt.compare(password, hashresult.rows[0].password);
-    const isMatch=password==hashresult[0].password;
+    const isMatch = await bcrypt.compare(password, hashresult[0].password);
+
+    // const isMatch=password==hashresult[0].password;
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
@@ -149,7 +150,8 @@ router.get("/register", (req, res) => {
 
 
 router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>{
-   let username = req.body.gmail
+   let username = req.body.username
+   console.log("getting the user fpor register",username)
   let response= await db.query("SELECT * FROM USERS WHERE gmail=$1",[username])
   if (response.rows.length!=0){
    return res.status(409).send("User already exists. Please log in.");
@@ -161,12 +163,14 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
      await adduser({
     name:req.body.name,
-    gmail: req.body.gmail,
+    gmail: req.body.username,
     password: hashedPassword,
-    role: req.body.role || "buyer", // Default role if not provided
+    role: req.body.role || "user", // Default role if not provided
      profile_pic: req.file ? req.file.filename : null,
     age:req.body.age
   });
+  res.render("register_success"); 
+
 }
 
 })
