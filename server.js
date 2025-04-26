@@ -41,6 +41,7 @@ const seller=require("./router/seller")
 
 app.use((req, res, next) => {
   res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
+  res.locals.user_id=req.isAuthenticated()&& req.user?req.user.user_id:null;
   next();
 });
 app.use((req,res,next)=>{

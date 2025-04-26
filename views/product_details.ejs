@@ -3,58 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <title><%= product.product_name %></title>
+    <style>
+        .product-spec {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .image_section {
+            position: relative;
+        }
+
+        #front_img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .multiple_imgs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .all_imgs img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .all_imgs img:hover {
+            border-color: #2c2c2c;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #28a745;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .add-cart {
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: opacity 0.3s;
+        }
+
+        .add-cart:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .product-spec {
+                grid-template-columns: 1fr;
+            }
+            
+            #front_img {
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        
-    </header>
-    <main>
-        <%- include('navbar') %>
-        <section>
-           
-            <div class="image_section">
-                <img id="front_img"src="<%= imgs.length > 0 ? imgs[0] : '' %>" alt="">
+    <%- include('navbar') %>
 
+    <main>
+        <section class="product-spec">
+            <div class="image_section">
+                <% if (images.length > 0) { %>
+                    <img id="front_img" src="/product_images/<%= images[0] %>" alt="<%= product.product_name %>">
+                <% } %>
 
                 <div class="multiple_imgs">
-                    <% if (imgs && imgs.length > 0) { %>
-                        <% imgs.forEach((img) => { %>
+                    <% if (images && images.length > 0) { %>
+                        <% images.forEach((img) => { %>
                             <div class="all_imgs">
-                                <img src="<%= img %>" onclick="changeimg('<%= img %>')" alt="Thumbnail of product">
+                                <img src="/product_images/<%= img %>" 
+                                     onclick="changeimg('/product_images/<%= img %>')" 
+                                     alt="<%= product.product_name %> thumbnail">
                             </div>
                         <% }) %>
-                    <% } else { %>
-                        <p>No images available.</p>
                     <% } %>
-
                 </div>
             </div>
-            <div class="product-spec">
-                
 
-                <div class="info">
-
-                </div>
-
-
-
-                
-                <div class="add-cart"> </div>
-
-
+            <div class="product-info">
+                <h1 class="product-title"><%= product.product_name %></h1>
+                <p class="product-price">₹ <%= product.product_price %></p>
+                <p class="product-description"><%= product.product_text %></p>
+                <button class="add-cart">Add to Cart</button>
             </div>
-
-            
-          
         </section>
     </main>
-   <script>
-    function changeimg(path){
-        document.getElementById('front_img').src=path;
 
-    }
+    <script>
+        function changeimg(path) {
+            document.getElementById('front_img').src = path;
+        }
+        const addCart=document.querySelector(".add-cart")
+        addCart.addEventListener("click",(e)=>{
+            
+            window.location.href=`/addCart/<%=product.product_id%>`
+        })
     </script>
 </body>
 </html>

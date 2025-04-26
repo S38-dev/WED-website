@@ -188,17 +188,7 @@
         </div>
         <div class="filter_options" style="display: none;">
             <form action="" method="get" id="filter_form">
-                <!-- <input type="radio" id="1000-2000"  name="filter_value" value="2000">
-                <label for="1000-2000" class="filter_radio">1000-2000</label><br>
-
-                <input type="radio" id="2000-3000" name="filter_value"   value="3000">
-                <label for="2000-3000"class="filter_radio">2000-3000</label><br>
-
-                <input type="radio" id="3000-4000" name="filter_value" value="4000">
-                <label for="3000-4000"class="filter_radio">3000-4000</label><br>
-                
-                <input type="radio" id="4000-5000" name="filter_value"   value="5000">
-                <label for="4000-5000"class="filter_radio">4000-5000</label><br> -->
+               
 
                 <label for="filter_value" class="filter_range">Set your Price <span class="price"> 0 </span></label><br>
 
@@ -224,8 +214,9 @@
 
 
         <div class="items_container">
+            <%console.log("result at frontend",result)%>
             <% result.forEach(product=> { %>
-                <a class="anchor" href="/product_details/<%=product.product_id %>">
+                <a class="anchor" href="/product_details/<%= product.product_id %>">
                     <div class="product_card">
                         <img src="/product_images/<%= product.product_pic %>" alt="<%= product.product_name %>" class="product_image" />
 
@@ -288,8 +279,7 @@
 
 
 
-                // const formData = new FormData();
-                // formData.append("value", value);
+               
                 const response = await fetch("/photography/filter", {
                     method: "POST",
                     headers: {
@@ -311,13 +301,14 @@
                 items.forEach(item => {
                     const anchor = document.createElement("a");
                     anchor.classList.add("anchor")
+                    console.log("building link for product:", item.product_id, "— pic is", item.product_pic);
                     anchor.href = `/product_details/${item.product_id}`;
 
                     const itemDiv = document.createElement("div");
                     itemDiv.classList.add("product_card");
 
                     itemDiv.innerHTML = `
-            <img src="${item.product_pic}" alt="${item.product_name}" class="product_image" />
+            <img src="/product_images/${item.product_pic}" alt="${item.product_name}" class="product_image" />
             <div class="product_info">
                 <h3 class="product_name">${item.product_name}</h3>
                 <p class="product_text">${item.product_text}</p>

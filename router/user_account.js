@@ -124,7 +124,11 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
+
     const profilephoto=await getUserProfilePic(username);
+
+
+
     console.log("user id in db <passport> ",user_result[0].id)
     return cb(null, { username:username ,profilephoto:profilephoto ,user_id:user_result[0].id});
   } catch (err) {
@@ -162,7 +166,7 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
 
  else {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-     await adduser({
+    const newUser= await adduser({
     name:req.body.name,
     gmail: req.body.username,
     password: hashedPassword,
@@ -170,9 +174,18 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
      profile_pic: req.file ? req.file.filename : null,
     age:req.body.age
   });
+  
   if(req.body.role=="admin"){
-    await db.query("INSERT INTO seller ")
+    await db.query("INSERT INTO seller(user_id) values($1)  ",[newUser.id])
   }
+
+
+   const userID = res.locals.user_id;
+      console.log("userId", res.locals.user_id)
+      const cartInfo = await db.query(`
+          INSERT INTO cart (user_id) values ($1) RETURNING*
+          `,[newUser.id]);
+      console.log("cart info", cartInfo.rows)
   res.render("register_success"); 
 
 }
