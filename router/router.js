@@ -86,9 +86,9 @@ router.get("/galary", (req, res) => {
 router.get("/photography", async(req, res) => {
     
        
-    const result = await getProduct("photography");
+    const result = await getProduct("Photography");
     
-
+   
     
     res.render('photography',{result:result})
     
@@ -226,11 +226,16 @@ router.get("TargerProfile/:username",  async (req,res)=>{
 
 
 router.get ("/product_details/:product_id", async (req,res)=>{
-    
+    console.log("check id ", req.params.product_id)
     const id = req.params.product_id;
+    console.log("getting the photography id in productdetails ",id)
     const productimgs= await db.query("SELECT * FROM products INNER JOIN product_img ON product_img.product_id=products.product_id  WHERE products.product_id =$1",[id])
-    console.log("the ptoduct that is being clicked ",productimgs)
-    res.render("product_details",{imgs:productimgs.rows})
+    console.log("the ptoduct that is being clicked ",productimgs.rows)
+    const imgarr=productimgs.rows.map(p=>p.product_img)
+    const name=productimgs.rows[0].product_name
+    const des=productimgs.rows[0]. product_text
+    const price=productimgs.rows[0].product_price
+    res.render("product_details",{imgarr,name,des,price});
 
 })
 

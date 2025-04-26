@@ -4,81 +4,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
- 
+    <title>Gallery</title>
     <style>
-        .item{
-            background-color: rgb(163, 90, 231);
-            height:150px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #d8e4f7 100%);
+            min-height: 100vh;
         }
-        .galary{
-            display:grid;
-            margin:5px;
-            grid-template-columns:repeat(6, minmax(150px, 280px)); 
-            column-gap: 78px;
-            row-gap:22px;
-            
-        }
-        .info{
+
+        .info {
             text-align: center;
-            margin-bottom:70px;
-        }
-        .line{
-            width:100px;
-            height:2px;
-            background-color: black;
-            margin:0 auto;
-
+            padding: 4rem 0;
+            margin-bottom: 2rem;
         }
 
+        .info h1 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
 
+        .line {
+            width: 60px;
+            height: 4px;
+            background-color: #e74c3c;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
 
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 0 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
 
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1;
+        }
 
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
 
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
 
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
 
+        .gallery-item::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .item-number {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 2;
+            transition: bottom 0.3s ease;
+        }
+
+        .gallery-item:hover .item-number {
+            bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                padding: 0 2%;
+                gap: 1rem;
+            }
+            
+            .info h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
-
-
 </head>
 
 <body>
     <%- include('navbar') %>
+    
     <div class="info">
-        <h1 >GALARY</h1>
+        <h1>Our Gallery</h1>
         <div class="line"></div>
-        <hr>
-
-
-    </div>
-    <div class="galary">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
-        <div class="item">7</div>
-        <div class="item">8</div>
-        <div class="item">9</div>
-        <div class="item">10</div>
-        <div class="item">11</div>
-        <div class="item">12</div>
-        <div class="item">13</div>
-        <div class="item">14</div>
-        <div class="item">15</div>
-        <div class="item">16</div>
-        <div class="item">17</div>
-        <div class="item">18</div>
-        <div class="item">19</div>
-        <div class="item">20</div>
-
     </div>
 
-
+    <div class="gallery">
+        <% for(let i=1; i<=20; i++) { %>
+            <div class="gallery-item">
+                <img src="https://picsum.photos/400/400?random=<%=  Math.random()%>" alt="Gallery image <%= i %>">
+                <div class="item-number"><%= i %></div>
+            </div>
+        <% } %>
+    </div>
 </body>
-
 </html>

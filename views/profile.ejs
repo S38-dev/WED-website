@@ -90,6 +90,7 @@
         const reader = new FileReader();
 
         reader.readAsDataURL(file);
+
         reader.onload = function (e) {
           previewImg.src = e.target.result;
           console.log("base url ", e.target.result)
@@ -111,6 +112,8 @@
       }
 
       const formData = new FormData();
+      
+      console.log("file sending to backend",file)
       formData.append("profile_pic", file);
 
       try {

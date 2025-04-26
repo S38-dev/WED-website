@@ -112,20 +112,21 @@ router.post("/login/submit", passport.authenticate("local",{
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
   console.log("username : ",username);
   try {
-    const hashresult = await getPassword(username);//from db
+    const user_result = await getPassword(username);//from db
    
-    console.log("hashreasult ", hashresult)
-    if (hashresult.length === 0) {
+    console.log("hashreasult ", user_result)
+    if  (user_result.length === 0) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
-    const isMatch = await bcrypt.compare(password, hashresult[0].password);
+    const isMatch = await bcrypt.compare(password, user_result[0].password);
 
     // const isMatch=password==hashresult[0].password;
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
     const profilephoto=await getUserProfilePic(username);
-    return cb(null, { username:username ,profilephoto:profilephoto});
+    console.log("user id in db <passport> ",user_result[0].id)
+    return cb(null, { username:username ,profilephoto:profilephoto ,user_id:user_result[0].id});
   } catch (err) {
     return cb(err);
   }
@@ -169,6 +170,9 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
      profile_pic: req.file ? req.file.filename : null,
     age:req.body.age
   });
+  if(req.body.role=="admin"){
+    await db.query("INSERT INTO seller ")
+  }
   res.render("register_success"); 
 
 }

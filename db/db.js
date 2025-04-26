@@ -1,5 +1,6 @@
 const pg = require('pg');
 const { Client } = pg;
+const format = require('pg-format');
 
 // PostgreSQL configuration
 const db = new Client({
@@ -81,10 +82,10 @@ async function getPassword(username){
   console.log("hitting  get password")
   console.log("Looking for username (gmail):", username);
   try {
-   const query="Select password from users where  gmail = $1 "
+   const query="Select password,id from users where  gmail = $1 "
     const res = await db.query(query,[username]);
     
-    console.log('Fetched comments:', res.rows);
+    console.log('fetched user:', res.rows);
     return res.rows;  
 
 } catch(err){
@@ -165,6 +166,9 @@ async function getUser(gmail){
   console.log("user is  getting ",result.rows[0]);
   return result.rows[0]||"guest";
 }
+
+
+
 
 // Export functions for use in other modules
 module.exports = {

@@ -17,6 +17,8 @@ app.use(express.static("public"));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/product_images', express.static(path.join(__dirname, 'router/product_images')));
+
 app.use('/uploads', express.static(path.join(__dirname, 'router/uploads')));
 process.setMaxListeners(20); 
 app.use(session({
@@ -34,8 +36,15 @@ app.use(passport.session());
 
 const router = require("./router/router");
 const user_router=require("./router/user_account");
+const seller=require("./router/seller")
+
+
 app.use((req, res, next) => {
   res.locals.activeuser = req.isAuthenticated() && req.user ? req.user.username : null;
+  next();
+});
+app.use((req,res,next)=>{
+  console.log('Files:', req.files);
   next();
 });
 
@@ -75,7 +84,7 @@ app.use(async (req, res, next) => {
 
 app.use("/" , router)
 app.use("/user",user_router)
-
+app.use("/seller",seller)
 
 // app.get('/photography', (req, res) => {
 //   res.render('photography'); // views/photography.ejs

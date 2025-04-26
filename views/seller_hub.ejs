@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Dashboard</title>
+    <style>
+
+
+
+
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background-color: #f4f6f8;
+        color: #333333;
+        line-height: 1.5;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+   
+
+
+
+
+      .layout {
+        display: flex;
+        height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background-color: #2f3e4e;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+      }
+
+      
+
+
+
+
+
+
+      .sidebar h2 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+      }
+
+      .sidebar .add-btn {
+        background-color: #1abc9c;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 0.75rem 1.25rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .sidebar .add-btn:hover {
+        background-color: #16a085;
+      }
+
+      .sidebar nav {
+        margin-top: 2rem;
+        flex-grow: 1;
+      }
+
+      .sidebar nav ul {
+        list-style: none;
+      }
+
+      .sidebar nav li {
+        margin-bottom: 1rem;
+      }
+
+      .sidebar nav a {
+        display: block;
+        padding: 0.5rem;
+        border-radius: 4px;
+        color: #adb6c3;
+        transition: background-color 0.2s ease;
+      }
+
+      .sidebar nav a:hover,
+      .sidebar nav a.active {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+      }
+
+
+
+
+
+
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .search {
+        position: relative;
+        width: 280px;
+      }
+
+      .search input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ccd1d9;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .search .results {
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #ccd1d9;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        z-index: 10;
+      }
+
+      .search .results .item {
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        font-size: 0.95rem;
+      }
+
+      .search .results .item:hover {
+        background-color: #f1f3f5;
+      }
+
+
+
+
+
+
+
+
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card {
+        background-color: #ffffff;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+      }
+
+      .card-content {
+        padding: 1rem;
+      }
+
+      .card-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-content p {
+        font-size: 0.9rem;
+        color: #555555;
+        margin-bottom: 0.75rem;
+      }
+
+      .card-content .price {
+        font-weight: bold;
+        color: #1abc9c;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('navbar') %>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Seller Hub</h2>
+        <button class="add-btn" onclick="AddNewProduct('<%= sellerSellerId %>')">
+          + Add New Product
+        </button>
+        <nav>
+          <ul>
+            <li><a href="/seller/sellerhub" class="active">Dashboard</a></li>
+            <li><a href="/seller/orders">Orders</a></li>
+            <li><a href="/seller/settings">Settings</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="toolbar">
+          <div class="search">
+            <input type="search" id="searchInput" placeholder="Search products...">
+            <div class="results" id="searchResults"></div>
+          </div>
+          <!-- Future: add sort/filter dropdown here -->
+        </div>
+
+        <div class="grid" id="productGrid">
+          <% products.forEach(product => { %>
+            <a href="/seller/productdetail/<%= product.product_id %>" class="card">
+              <img src="<%= product.product_pic ? ('/product_images/'+product.product_pic) : '/imgs/default-avatar.jpg' %>" alt="<%= product.product_name %>">
+              <div class="card-content">
+                <h3><%= product.product_name %></h3>
+                <p><%= product.product_text %></p>
+                <div class="price">₹<%= product.product_price %></div>
+              </div>
+            </a>
+          <% }); %>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const resultsBox = document.getElementById('searchResults');
+      const grid = document.getElementById('productGrid');
+      // Capture initial cards as DOM nodes
+      const originalCards = Array.from(grid.children);
+
+      searchInput.addEventListener('input', () => {
+        const term = searchInput.value.trim().toLowerCase();
+        resultsBox.innerHTML = '';
+
+        // If search is empty, restore original grid
+        if (!term) {
+          resultsBox.style.display = 'none';
+          grid.innerHTML = '';
+          originalCards.forEach(card => grid.appendChild(card));
+          return;
+        }
+
+        resultsBox.style.display = 'block';
+        grid.innerHTML = '';
+
+        // Filter cards by name or description
+        const filtered = originalCards.filter(card => {
+          const name = card.querySelector('h3').textContent.toLowerCase();
+          const desc = card.querySelector('p').textContent.toLowerCase();
+          return name.includes(term) || desc.includes(term);
+        });
+
+        // Populate results dropdown
+        if (filtered.length) {
+          filtered.forEach(card => {
+            const name = card.querySelector('h3').textContent;
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.textContent = name;
+            item.onclick = () => window.location = card.href;
+            resultsBox.appendChild(item);
+          });
+          // Render filtered grid
+          filtered.forEach(card => grid.appendChild(card));
+        } else {
+          resultsBox.innerHTML = '<div class="item">No results found.</div>';
+          grid.innerHTML = '<p>No matching products.</p>';
+        }
+      });
+
+      function AddNewProduct(seller) {
+        window.location.href = `/seller/sellerhub/add/${seller}`;
+      }
+    </script>
+  </body>
+</html>
