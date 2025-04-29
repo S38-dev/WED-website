@@ -20,10 +20,10 @@ db.connect().then(() => {
 });
 
 // Function to add a comment
-async function addcomment(comment) {
-  const query = 'INSERT INTO comment(comment) VALUES ($1) RETURNING *';
+async function addcomment(comment,userId) {
+  const query = 'INSERT INTO comment(comment,user_id) VALUES ($1,$2) RETURNING *';
   try {
-    const result = await db.query(query, [comment]);
+    const result = await db.query(query, [comment,userId]);
     console.log('Comment added:', result.rows[0]);
     return result.rows[0];
   } catch (error) {
@@ -32,7 +32,7 @@ async function addcomment(comment) {
   }
 }
 
-// Function to fetch all comments
+
 async function getcomment() {
   const query = `select users.name,comment.comment, users.profile_pic ,users.role,users.gmail FROM comment INNER JOIN
     users on users.id=comment.user_id               
@@ -41,7 +41,7 @@ async function getcomment() {
     const res = await db.query(query);
 
     console.log('Fetched comments:', res.rows);
-    return res.rows; // Return the fetched comments
+    return res.rows
   } catch (error) {
     console.error('Error fetching comments:', error.message);
     throw error;
@@ -52,22 +52,22 @@ async function getCartItems(user_id) {
   const query = `SELECT 
     cart.cart_id,
     
-    cart_items.item_id,
-    cart_items.quantity,
+    cart_items.cart_item_id,
+    
     products.product_id,
     products.product_name,
     products.product_price,
-    product.product_pic
+    products.product_pic
    FROM cart
    INNER JOIN cart_items ON cart.cart_id = cart_items.cart_id
    INNER JOIN products ON cart_items.product_id = products.product_id
    WHERE cart.user_id = $1;`;
   try {
     const res = await db.query(query, [user_id]);
-    console.log('Fetched comments:', res.rows);
+    console.log('Fetched cart item:', res.rows);
     return res.rows; // Return the fetched comments
   } catch (error) {
-    console.error('Error fetching comments:', error.message);
+    console.error('Error fetching cart items:', error.message);
     throw error;
   }
 }

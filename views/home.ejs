@@ -85,6 +85,7 @@
 
         }
 
+
         h2 {
             font-family: "Inder", sans-serif;
             font-weight: 20;
@@ -154,6 +155,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
             max-height: 250px;
+            min-height: 230px;
+            ;
             width: 40vh;
             margin-top: 30px;
             margin-left: 8px;
@@ -174,6 +177,10 @@
             width: 50px;
             border-radius: 50%;
             margin-right: 15px;
+            position: fixed;
+            top: 40px;
+            margin-bottom: 10px;
+            ;
         }
 
         .review-date {
@@ -198,13 +205,17 @@
             position: relative;
             display: flex;
             justify-content: center;
-            
+
             margin: 0 auto;
         }
 
         .view_all:hover {
             background-color: #e04a4b;
             /* darker shade for hover */
+        }
+
+        .review-card p {
+            margin-top: 50px;
         }
     </style>
 </head>
@@ -244,12 +255,12 @@
                                 <% all_comments.forEach(review=> { %>
                                     <div class="swiper-slide">
                                         <div class="review-card">
-                                            <div class="stars">★★★★★</div>
+                                            <!-- <div class="stars">★★★★★</div> -->
                                             <p>
                                                 <%= review.comment||"No Comment" %>
                                             </p>
                                             <div class="review-footer">
-                                                <img src="<%=review.user_profile|| '/imgs/default-avatar.jpg' %>"
+                                                 <img src="<%= user_profile ? '/uploads/' + user_profile : '/imgs/default-avatar.jpg' %>"
                                                     class="avatar">
                                                 <div>
                                                     <h4>
@@ -281,25 +292,27 @@
             var swiper = new Swiper(".mySwiper", {
                 loop: true,
                 autoplay: {
-                    delay: 0, // <-- No delay between slides
+                    delay: 0,
                     disableOnInteraction: false,
                 },
-                speed: 4000, // <-- Controls how slow the transition is (higher = smoother)
-                slidesPerView: 2, // Or 1 for mobile
+                speed: 4000,
+                slidesPerView: 2,
                 spaceBetween: 30,
-                allowTouchMove: false, // <-- Optional: makes it fully automatic
+                allowTouchMove: false,
+                simulateTouch: false,
                 grabCursor: false,
-                freeMode: true, // <-- Enables momentum-based sliding
-                freeModeMomentum: false, // <-- Disable sudden jumps
+                freeMode: false,
+                freeModeMomentum: false,
                 breakpoints: {
                     768: {
                         slidesPerView: 2,
                     },
                     320: {
                         slidesPerView: 1,
-                    },
-                },
+                    }
+                }
             });
+
 
 
         </script>

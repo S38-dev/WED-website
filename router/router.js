@@ -7,8 +7,8 @@ const multer = require('multer')
 const nodemailer = require('nodemailer');
 const { db, addcomment, getcomment, getCartItems, getProduct, getfilteredproduct, getUserProfilePic } = require('../db/db');
 
+const Razorpay = require('razorpay');
 
-//home
 
 router.get("/", async (req, res) => {
     console.log("Route / is being hit");
@@ -18,15 +18,17 @@ router.get("/", async (req, res) => {
         const userobj = await getcomment(); // Fetch comments
 
         console.log("comments in home ", userobj);
-        let all_comments = userobj?.comment || [];
+        let all_comments = userobj|| [];
+        console.log("all comment ",all_comments)
 
         let user = userobj?.user_id || "guest";
 
         let profile_pic = userobj?.profile_pic || "../public/imgs/default.png";
+        console.log("comment pic",user)
 
 
         let user_name = userobj?.name || "guest";
-        let user_data = req.user; // this is from passport
+        let user_data = req.user; 
 
         let activeuser = user_data?.username || null;
         console.log("active user ", activeuser)
@@ -64,7 +66,7 @@ router.get("/", async (req, res) => {
 
 
 
-//galary
+
 
 
 
@@ -78,8 +80,6 @@ router.get("/galary", (req, res) => {
     res.render('galary.ejs')
 
 })
-
-//photography
 
 
 router.get("/photography", async (req, res) => {
@@ -137,7 +137,13 @@ router.post("/photography/filter", async (req, res) => {
 //review or comment 
 
 router.get("/review/add-review", async (req, res) => {
+    if(req.isAuthenticated()){
     res.render("comment.ejs")
+    } 
+    else {
+        res.redirect("/user/login")
+
+    }
 
 })
 
@@ -175,8 +181,12 @@ router.get("/more_reviews", async (req, res) => {
 router.post("/review/add-review", async (req, res) => {
     if (req.body.comment) {
         let comment = req.body.comment;
-        // add these comments to pg database
-        await addcomment(comment);
+        if(req.isAuthenticated()){
+        console.log("user is in add comment ",req.user)
+        
+
+        await addcomment(comment,req.user.user_id);
+        }
     }
 
     res.redirect('/');
@@ -185,14 +195,15 @@ router.post("/review/add-review", async (req, res) => {
 
 //cart
 
-router.get("/cart", (req, res) => {
+router.get("/cart", async (req, res) => {
 
     if (!req.isAuthenticated() || !req.user) {
         console.log("hlw")
-        return res.redirect("/user/login"); // Or send a message, your choice.
+        return res.redirect("/user/login");
     }
     else {
-        const usercart = getCartItems(req.user.gmail) || null;
+        const usercart = await getCartItems(req.user.user_id) || null;
+        console.log("csrtitems", usercart)
         res.render("cart", { cartItems: usercart })
     }
 
@@ -203,10 +214,10 @@ router.get("/addCart/:productId", async (req, res) => {
     console.log("product id in add cart ", req.params.productId)
     const productId = req.params.productId
     const userID = res.locals.user_id;
-    console.log("userid in addcart",userID)
-    const result=await db.query("select cart_id from cart where user_id= ($1)",[userID] );
+    console.log("userid in addcart", userID)
+    const result = await db.query("select cart_id from cart where user_id= ($1)", [userID]);
     console.log("the cart id ", result.rows)
-    db.query("INSERT INTO cart_items (cart_id,product_id) values($1,$2)",[result.rows[0].cart_id,productId])
+    db.query("INSERT INTO cart_items (cart_id,product_id) values($1,$2)", [result.rows[0].cart_id, productId])
     res.redirect("/cart")
 
 
@@ -273,10 +284,47 @@ router.get("/product_details/:product_id", async (req, res) => {
         res.status(500).send("Server error");
     }
 });
+router.delete("/cart/:itemId", async (req, res) => {
+    try {
+        const query = "DELETE FROM cart_items where cart_item_id =$1"
+        await db.query(query, [req.params.itemId]);
+        res.status(200).json({ message: 'Item deleted successfully' });
+    } catch (err) { 
+        console.log("error while deleting the item",err)
+        res.status(500).json({ message: 'An error has been occurred' });
+    }
+})
+
+router.get("/checkout/:cartItems",(req,res)=>{
+    const decodedCartItems = decodeURIComponent(req.params.cartItems);
+    const cartItems = JSON.parse(decodedCartItems);
+    console.log("Parsed cartItems:", cartItems);
+    res.render("checkout", { cartItems });
+})
 
 
-// Mock user DB
+const razorpay=new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret:process.env.RAZORPAY_KEY_SECRET,
+
+})
+
+router.post("/payment", async (req,res)=>{ 
+const amount= req.body.amount;
+const options={
+    amount:amount,
+    currency:"INR",
+    receipt: `receipt_${Date.now()}`,
+    payment_capture: 1,
+};
+try{
+const response = await razorpay.orders.create(options);
+res.json({response, key_id: process.env.RAZORPAY_KEY_ID,});
+}
+catch(err){
+    res.status(500).send({message:"something went wrong"})
+}
+})
 
 
-
-module.exports = router;
+module.exports = router; 

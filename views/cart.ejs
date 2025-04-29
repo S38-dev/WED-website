@@ -1,11 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .cart-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #cc0000;
+        }
+
+        .checkout-section {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .total-price {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .checkout-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #45a049;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #666;
+            padding: 40px 0;
+        }
+    </style>
 </head>
+
 <body>
-    cart
+    <div class="cart-container">
+        <h1 class="cart-header">Your Cart</h1>
+
+        <% if (cartItems && cartItems.length) { %>
+            <div class="cart-items">
+                <% cartItems.forEach(item=> { %>
+                    <div class="cart-item" data-item-id="<%= item.cart_item_id %>">
+                        <img src="/product_images/<%= item.product_pic %>" alt="<%= item.product_name %>"
+                            class="product-image">
+                        <div class="product-info">
+                            <h2 class="product-name">
+                                <%= item.product_name %>
+                            </h2>
+                            <p class="product-price">₹ <%= item.product_price %>
+                            </p>
+                        </div>
+                        <button class="delete-btn" onclick="deleteItem('<%= item.cart_item_id %>')">Delete</button>
+                    </div>
+                    <% }); %>
+            </div>
+
+            <div class="checkout-section">
+                <p class="total-price">
+                    Total: ₹ <%= cartItems.reduce((sum, item)=> sum + parseFloat(item.product_price), 0).toFixed(2) %>
+                </p>
+                <button class="checkout-btn" onclick="handleCheckout()">Proceed to Checkout</button>
+            </div>
+            <% } else { %>
+                <p class="empty-cart">Your cart is empty</p>
+                <% } %>
+    </div>
+
+    <script>
+        async function deleteItem(itemId) {
+            try {
+                const response = await fetch(`/cart/${itemId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+
+                    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+                    if (itemElement) {
+                        itemElement.remove();
+
+
+                    }
+                    location.reload();
+                } else {
+                    alert('Failed to delete item');
+                }
+            } catch (error) {
+                console.error('cart delete error:', error);
+                alert('An error occurred while deleting the item');
+            }
+        }
+        const cartItems = '<%= encodeURIComponent(JSON.stringify(cartItems)) %>';
+        console.log("cartitems in frontend before sending as params ", cartItems);
+
+        function handleCheckout() {
+
+            window.location.href = `/checkout/${cartItems}`;
+        }
+
+        // Optional: Add quantity controls
+        // function updateQuantity(itemId, change) {
+        //     // Implement quantity update logic
+        // }
+    </script>
 </body>
+
 </html>

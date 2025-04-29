@@ -4,6 +4,7 @@ const app = express();
 const session = require("express-session"); 
 const path = require('path');
 const{getUserProfilePic,getUser}=require('./db/db')//db
+require('dotenv').config()
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
@@ -12,7 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 var passport = require('passport');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
- // Import router
+
 app.use(express.static("public"));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +31,7 @@ app.use(session({
  
 
 
- // Fix typo from "pubic" to "public"
+ 
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -44,10 +45,7 @@ app.use((req, res, next) => {
   res.locals.user_id=req.isAuthenticated()&& req.user?req.user.user_id:null;
   next();
 });
-app.use((req,res,next)=>{
-  console.log('Files:', req.files);
-  next();
-});
+
 
 
 app.use(async (req, res, next) => {

@@ -23,7 +23,7 @@ const productImage= multer({ dest: path.join(__dirname, 'product_images') })
 router.get("/sellerhub", async (req, res) => {
     console.log("isAuthenticated?", req.isAuthenticated());
     if(req.isAuthenticated()){
-    console.log("req.user:", req.user); // Should NOT be undefined
+    console.log("req.user:", req.user); 
     const products= await getSellerProducts(req.user.user_id) ;
     const sellerUser_Id=products[0].id
     const sellerSellerid=products[0].seller_id
