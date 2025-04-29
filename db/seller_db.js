@@ -66,17 +66,17 @@ async function deleteProduct(product_id){
 WHERE product_id =$1`,[product_id])
 }
 
-async function getSellerProducts(seller_id) {
+async function getSeller(user_id) {
+ 
   try {
     let res = await db.query(
-      `SELECT seller.seller_id, users.id, users.gmail, products.* 
+      `SELECT seller.seller_id, users.id, users.gmail
       FROM seller 
-      INNER JOIN users ON seller.user_id = users.id 
-      INNER JOIN products ON seller.seller_id = products.seller_id 
+      INNER JOIN users ON seller.user_id = users.id   
       WHERE users.id = $1;`,
-      [seller_id]
+      [user_id]
     );
-    console.log("result of getSellerProducts ", res.rows);
+    console.log("result of getSeller ", res.rows);
     return res.rows;
   } catch (err) {
     console.log("error fetching seller products", err);
@@ -84,18 +84,35 @@ async function getSellerProducts(seller_id) {
 }
  async function getProductDetail(productId){
   console.log("getsellerproduct riute is hitting")
-  const query="SELECT products.* ,product_img.product_img ,product_img.product_img_id FROM products INNER JOIN product_img on product_img.product_id=products.product_id where products.product_id=$1 "
+  const query="SELECT products.* ,product_img.product_img ,product_img.product_img_id FROM products LEFT JOIN product_img on product_img.product_id=products.product_id where products.product_id=$1 "
  const res=await db.query(query,[productId]) 
  console.log('db response ',res)
  return res.rows
 }
 
+async function getSellerProducts(sellerid){
+    const query=`select products.* from products where seller_id= $1`
+    try{
+    const res=await db.query(query,[sellerid]) 
+    if(res.rows.length>0){
+      console.log("seller's all products ",res)
+      return res.rows
+    }
+    else{
+      return null
+    }
+  }catch(e){
+    console.log("error to fetch  products",e)
+  }
+}
 module.exports = {
+  db,
   addproduct,
   editproduct,
-  getSellerProducts,
+  getSeller,
   addproductImages,
   getProductDetail,
   deleteProduct,
+  getSellerProducts,
 };
 

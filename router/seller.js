@@ -2,7 +2,7 @@ const express = require("express")
 const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
-const {addproduct,editproduct,getSellerProducts,addproductImages,getProductDetail,deleteProduct } = require('../db/seller_db');
+const {db,addproduct,editproduct,getSeller,addproductImages,getProductDetail,deleteProduct,getSellerProducts } = require('../db/seller_db');
 app.use(express.urlencoded({ extended: true })); 
 const multer=require("multer")
 const path = require('path');
@@ -24,9 +24,10 @@ router.get("/sellerhub", async (req, res) => {
     console.log("isAuthenticated?", req.isAuthenticated());
     if(req.isAuthenticated()){
     console.log("req.user:", req.user); 
-    const products= await getSellerProducts(req.user.user_id) ;
-    const sellerUser_Id=products[0].id
-    const sellerSellerid=products[0].seller_id
+    const seller= await getSeller(req.user.user_id) ;
+    const sellerUser_Id=seller[0].id
+    const sellerSellerid=seller[0].seller_id
+    const products=await getSellerProducts(sellerSellerid);
     console.log("sellerUser_Id",sellerUser_Id)
     console.log("produxts in sellerhub route",products  )
     
@@ -85,7 +86,7 @@ router.get("/productdetail/:productid", async (req,res)=>{
         
 
  
-})
+}) 
 
  router.post("/product/update/:productID",productImage.any() ,async (req,res)=>{
   console.log("the product updates is hitting");
@@ -93,6 +94,10 @@ router.get("/productdetail/:productid", async (req,res)=>{
   const productId=req.params.productID
   console.log("productId",productId)
   console.log("the rwquest body is ",req.body)
+  console.log("req.files",req.body.delete_imgs)
+  if(req.body.delete_imgs){
+    await db.query(`delete from product_img where product_img=$1`,[req.body.delete_imgs])
+  }
   await editproduct(productId,req.body)
   res.redirect("/seller/sellerhub")
 
