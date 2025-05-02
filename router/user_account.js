@@ -4,7 +4,7 @@ const router = express.Router()
 const app = express()
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
+const nodemailer = require('nodemailer');
 var session = require('express-session')
 app.use(express.urlencoded({ extended: true }));
 var passport = require('passport');
@@ -100,7 +100,8 @@ router.get("/login", (req, res) => {
 router.post("/login/submit", passport.authenticate("local",{
    
   successRedirect: '/',
-  failureRedirect: '/user/login'
+  failureRedirect:'/user/login',
+  failureFlash: true
 
 }))
 
@@ -120,7 +121,7 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     }
     const isMatch = await bcrypt.compare(password, user_result[0].password);
 
-    // const isMatch=password==hashresult[0].password;
+    
     if (!isMatch) {
       return cb(null, false, { message: "Incorrect username or password." });
     }
@@ -213,6 +214,72 @@ passport.deserializeUser(function(user,cb){
 })
 
 
+
+const pinStorage = {};
+router.post("/forgot_password", async (req, res) => {
+  const gmail = req.body.username;
+  console.log("gmail for forgetpassword",gmail)
+  const pin = Math.floor(100000 + Math.random() * 900000).toString();
+  pinStorage[gmail] = {
+    pin,
+    expires: Date.now() + 15 * 60 * 1000
+  };
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'subhojit555666@gmail.com',
+          pass: process.env.googlepass
+      }
+  });
+  const mailOptions = {
+    from: 'subhojit555666@gmail.com',
+    to: gmail,
+    subject: 'Your Password Reset PIN',
+    text: `Use this PIN to login: ${pin}`
+  };
+
+  try {
+      await transporter.sendMail(mailOptions);
+      console.log("Email sent successfully to:", gmail);
+      res.render("forgotPassword",{gmail})
+  } catch (err) {
+      console.error("failed to send mail",err);
+      res.status(500).send('Failed to send email');
+  }
+ 
+
+})
+
+
+router.post("/verify_pin",async(req,res)=>{
+  console.log("the ptinstorage",pinStorage)
+  const pin =pinStorage[req.body.gmail].pin;
+  console.log("submit pin",pin)
+  const username=req.body.gmail;
+  if(pin==req.body.pin){
+    const user_result = await getPassword(username);
+    const profilephoto=await getUserProfilePic(username);
+    const user_id=user_result[0].id
+    req.login(
+      {
+        username:username,
+        user_id: user_id,
+        profilephoto: profilephoto,
+      },
+      (err) => {
+        if (err) {
+          return res.redirect("/user/login");
+        }
+        delete pinStorage[username];
+        return res.redirect("/");
+      }
+      
+
+    )
+    
+  }
+
+})
 
 
 module.exports= router;

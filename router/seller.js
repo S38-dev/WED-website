@@ -2,7 +2,7 @@ const express = require("express")
 const bodyparser = require('body-parser')
 const router = express.Router()
 const app=express()
-const {db,addproduct,editproduct,getSeller,addproductImages,getProductDetail,deleteProduct,getSellerProducts } = require('../db/seller_db');
+const {db,addproduct,updateProductImages,editproduct,getSeller,addproductImages,getProductDetail,deleteProduct,getSellerProducts } = require('../db/seller_db');
 app.use(express.urlencoded({ extended: true })); 
 const multer=require("multer")
 const path = require('path');
@@ -67,6 +67,7 @@ router.get("/productdetail/:productid", async (req,res)=>{
   const productprice=product[0].product_price
   const productDes=product[0].product_text
   const productImgs=product.map(p=>p.product_img)
+  console.log("product images...",productImgs)
   res.render("sellerProductView",{product ,product_id,productName,productprice,productDes,product,productImgs})
 
 
@@ -85,10 +86,10 @@ router.get("/productdetail/:productid", async (req,res)=>{
         res.redirect("/seller/sellerhub")
         
 
- 
+  
 }) 
 
- router.post("/product/update/:productID",productImage.any() ,async (req,res)=>{
+ router.post("/product/update/:productID",productImage.array('new_images',3) ,async (req,res)=>{
   console.log("the product updates is hitting");
   
   const productId=req.params.productID
@@ -99,13 +100,23 @@ router.get("/productdetail/:productid", async (req,res)=>{
     await db.query(`delete from product_img where product_img=$1`,[req.body.delete_imgs])
   }
   await editproduct(productId,req.body)
+ console.log("files in sellerProductView",req.files)
+ await updateProductImages(productId,req.files)
   res.redirect("/seller/sellerhub")
 
  })
+
+
+
+
+
  router.post("/product/delete/:productid",productImage.any(),async(req,res)=>{
    console.log("productId",req.params.productid)
    await deleteProduct(req.params.productid);
    res.redirect("/seller/sellerhub")
  })
+
+
+
 
 module.exports = router;

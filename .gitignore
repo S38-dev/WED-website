@@ -1,3 +1,10 @@
+
+#mutler
+/router/uploads/*
+/router/product_images
+
+
+
 # Logs
 node_modules/
 

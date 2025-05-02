@@ -231,7 +231,7 @@
       <div class="form-group">
         <label>Current Images</label>
         <div class="image-gallery">
-          <%
+          <%if(productImgs && productImgs[0]!=null ){%>
           <% productImgs.forEach((img, index) => { %>
             <div class="image-item">
               <img src="/product_images/<%= img %>" alt="Product Image">
@@ -240,7 +240,8 @@
                 Delete
               </label>
             </div>
-          <% }) %>
+          <% }) }%>
+
         </div>
       </div>
 
@@ -255,7 +256,7 @@
             <input type="file" accept="image/*" multiple hidden onchange="handleFiles(event)" id="file-input">
           </label>
         </div>
-        <input type="file" name="new_images[]" id="hidden-upload" multiple class="hidden-input">
+        <input type="file" name="new_images" id="hidden-upload" multiple class="hidden-input" multiple>
       </div>
 
       <div class="button-group">
@@ -280,7 +281,7 @@
   </div>
 
   <script>
-    const maxImages = 8;
+    const maxImages = 3;
     let uploadedFiles = [];
 
     function handleFiles(event) {
@@ -292,6 +293,7 @@
 
         files.forEach(file => {
             const reader = new FileReader();
+            uploadedFiles.push(file);
             reader.onload = (e) => {
                 const preview = document.createElement('div');
                 preview.className = 'preview-image';
@@ -300,7 +302,7 @@
                     <button class="remove-btn" onclick="removeImage(this)">×</button>
                 `;
                 document.getElementById('upload-grid').insertBefore(preview, document.querySelector('.upload-box'));
-                uploadedFiles.push(file);
+               
             };
             reader.readAsDataURL(file);
         });
@@ -318,6 +320,7 @@
     function updateHiddenInput() {
         const dataTransfer = new DataTransfer();
         uploadedFiles.forEach(file => dataTransfer.items.add(file));
+        console.log("datatransfer file",dataTransfer.files)
         document.getElementById('hidden-upload').files = dataTransfer.files;
     }
 

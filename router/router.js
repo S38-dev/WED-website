@@ -4,7 +4,7 @@ const router = express.Router()
 const app = express()
 const multer = require('multer')
 
-const nodemailer = require('nodemailer');
+
 const { db, addcomment, getcomment, getCartItems, getProduct, getfilteredproduct, getUserProfilePic } = require('../db/db');
 
 const Razorpay = require('razorpay');
@@ -18,17 +18,17 @@ router.get("/", async (req, res) => {
         const userobj = await getcomment(); // Fetch comments
 
         console.log("comments in home ", userobj);
-        let all_comments = userobj|| [];
-        console.log("all comment ",all_comments)
+        let all_comments = userobj || [];
+        console.log("all comment ", all_comments)
 
         let user = userobj?.user_id || "guest";
 
         let profile_pic = userobj?.profile_pic || "../public/imgs/default.png";
-        console.log("comment pic",user)
+        console.log("comment pic", user)
 
 
         let user_name = userobj?.name || "guest";
-        let user_data = req.user; 
+        let user_data = req.user;
 
         let activeuser = user_data?.username || null;
         console.log("active user ", activeuser)
@@ -137,9 +137,9 @@ router.post("/photography/filter", async (req, res) => {
 //review or comment 
 
 router.get("/review/add-review", async (req, res) => {
-    if(req.isAuthenticated()){
-    res.render("comment.ejs")
-    } 
+    if (req.isAuthenticated()) {
+        res.render("comment.ejs")
+    }
     else {
         res.redirect("/user/login")
 
@@ -152,25 +152,17 @@ router.get("/review/add-review", async (req, res) => {
 
 router.get("/more_reviews", async (req, res) => {
     try {
-        const userobj = await getcomment(); // Fetch comments
-        console.log("more review")
-
-        console.log(userobj);
-        let all_comments = userobj?.comment || [];
-        let user = userobj?.user_id || "guest";
-        let profile_pic = userobj?.profile_pic || "../public/imgs/default.png";
-        let role = userobj?.role || "viewer"
-        if (req.headers["accept"] && req.headers["accept"].includes("application/json")) {
-            res.json({ all_comments, user, user_profile: profile_pic });
-        } else {
-            res.render("more_review", { all_comments, user, user_profile: profile_pic });
-        }
+        const comments = await getcomment();
+        res.render("more_review", {
+            all_comments: comments,
+            user: req.user ? req.user.name : 'Guest',
+            // user_profile: comments.profile_pic?"/uploads/"+comments.profile_pic:'/imgs/default.png'
+        });
     } catch (error) {
         console.error("Error fetching comments:", error);
         res.status(500).send("Internal Server Error");
     }
-})
-
+});
 
 
 
@@ -181,11 +173,11 @@ router.get("/more_reviews", async (req, res) => {
 router.post("/review/add-review", async (req, res) => {
     if (req.body.comment) {
         let comment = req.body.comment;
-        if(req.isAuthenticated()){
-        console.log("user is in add comment ",req.user)
-        
+        if (req.isAuthenticated()) {
+            console.log("user is in add comment ", req.user)
 
-        await addcomment(comment,req.user.user_id);
+
+            await addcomment(comment, req.user.user_id);
         }
     }
 
@@ -289,13 +281,13 @@ router.delete("/cart/:itemId", async (req, res) => {
         const query = "DELETE FROM cart_items where cart_item_id =$1"
         await db.query(query, [req.params.itemId]);
         res.status(200).json({ message: 'Item deleted successfully' });
-    } catch (err) { 
-        console.log("error while deleting the item",err)
+    } catch (err) {
+        console.log("error while deleting the item", err)
         res.status(500).json({ message: 'An error has been occurred' });
     }
 })
 
-router.get("/checkout/:cartItems",(req,res)=>{
+router.get("/checkout/:cartItems", (req, res) => {
     const decodedCartItems = decodeURIComponent(req.params.cartItems);
     const cartItems = JSON.parse(decodedCartItems);
     console.log("Parsed cartItems:", cartItems);
@@ -303,28 +295,31 @@ router.get("/checkout/:cartItems",(req,res)=>{
 })
 
 
-const razorpay=new Razorpay({
+const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret:process.env.RAZORPAY_KEY_SECRET,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
 
 })
 
-router.post("/payment", async (req,res)=>{ 
-const amount= req.body.amount;
-const options={
-    amount:amount,
-    currency:"INR",
-    receipt: `receipt_${Date.now()}`,
-    payment_capture: 1,
-};
-try{
-const response = await razorpay.orders.create(options);
-res.json({response, key_id: process.env.RAZORPAY_KEY_ID,});
-}
-catch(err){
-    res.status(500).send({message:"something went wrong"})
-}
+router.post("/payment", async (req, res) => {
+    const amount = req.body.amount;
+    const options = {
+        amount: amount,
+        currency: "INR",
+        receipt: `receipt_${Date.now()}`,
+        payment_capture: 1,
+    };
+    try {
+        const response = await razorpay.orders.create(options);
+        res.json({ response, key_id: process.env.RAZORPAY_KEY_ID, });
+    }
+    catch (err) {
+        res.status(500).send({ message: "something went wrong" })
+    }
 })
+
+
+
 
 
 module.exports = router; 

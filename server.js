@@ -4,6 +4,7 @@ const app = express();
 const session = require("express-session"); 
 const path = require('path');
 const{getUserProfilePic,getUser}=require('./db/db')//db
+const flash = require('connect-flash');
 require('dotenv').config()
 
 app.set("view engine", "ejs");
@@ -19,7 +20,7 @@ app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/product_images', express.static(path.join(__dirname, 'router/product_images')));
-
+app.use(flash());
 app.use('/uploads', express.static(path.join(__dirname, 'router/uploads')));
 process.setMaxListeners(20); 
 app.use(session({
@@ -78,22 +79,16 @@ app.use(async (req, res, next) => {
 });
 
 
-
+app.use((req, res, next) => {
+  res.locals.messages = req.flash();
+  next();
+});
 
 
 app.use("/" , router)
 app.use("/user",user_router)
 app.use("/seller",seller)
 
-// app.get('/photography', (req, res) => {
-//   res.render('photography'); // views/photography.ejs
-// });
-
-
-// app.use("/photography",router)
-//  // Use router 
-
-// app.use("photography/action",router)
 
 
 

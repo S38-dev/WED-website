@@ -1,12 +1,86 @@
-
+<!-- views/more_review.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Comments Section</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+
+        .comment-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .comment-card {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .profile-pic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .user-info {
+            flex-grow: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-role {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .comment-text {
+            color: #444;
+            line-height: 1.6;
+            margin-left: 57px;
+        }
+    </style>
 </head>
 <body>
-    more review
+    <div class="comment-section">
+        <h1>Comments</h1>
+        
+        <% all_comments.forEach(function(comment) { %>
+        <div class="comment-card">
+            <div class="comment-header">
+                <img src="<%=comment.profile_pic?"/uploads/"+comment.profile_pic: '/imgs/default-avatar.jpg' %>" 
+                     alt="Profile" 
+                     class="profile-pic">
+                <div class="user-info">
+                    <div class="user-name"><%= comment.name %></div>
+                    <div class="user-role"><%= comment.role %></div>
+                </div>
+            </div>
+            <div class="comment-text">
+                <%= comment.comment %>
+            </div>
+        </div>
+        <% }); %>
+    </div>
 </body>
 </html>

@@ -105,6 +105,20 @@ async function getSellerProducts(sellerid){
     console.log("error to fetch  products",e)
   }
 }
+
+async function updateProductImages(productid,files){
+  
+  const array=files.map(file=>[productid,file.filename]);
+  console.log("the array",array)
+  try{
+    const query=format("insert into product_img(product_id,product_img) values %L RETURNING *",array)
+   const res=await db.query(query);
+   console.log("debugging the img update",res.rows)
+  }catch(e){
+    console.log("error adding new images ",e)
+  }
+
+}
 module.exports = {
   db,
   addproduct,
@@ -114,5 +128,6 @@ module.exports = {
   getProductDetail,
   deleteProduct,
   getSellerProducts,
+  updateProductImages,
 };
 
