@@ -1,9 +1,9 @@
 const express = require("express")
 const bodyparser = require('body-parser')
 const router = express.Router()
-const app=express()
+
 const {db,addproduct,updateProductImages,editproduct,getSeller,addproductImages,getProductDetail,deleteProduct,getSellerProducts } = require('../db/seller_db');
-app.use(express.urlencoded({ extended: true })); 
+
 const multer=require("multer")
 const path = require('path');
 const productImage= multer({ dest: path.join(__dirname, 'product_images') })
