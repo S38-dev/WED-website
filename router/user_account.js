@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const nodemailer = require('nodemailer');
 var session = require('express-session')
-app.use(express.urlencoded({ extended: true }));
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 const path = require('path');
@@ -17,7 +17,7 @@ const multer = require("multer");
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') }); //multer
 
-app.use(express.urlencoded({ extended: true }));
+
 
 
 const { db,addcomment, getcomment, getCartItems, getPassword ,adduser,addprofilepic,getUserProfilePic} = require('../db/db');
