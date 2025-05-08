@@ -57,7 +57,7 @@ router.get("/profile/:username/edit", (req, res) => {
 })
 
 
-router.post("/profile/edit/upload",ensureAuthenticated, upload.single('profile_pic'), (req, res) => {
+router.post("/profile/edit/upload",ensureAuthenticated, upload.single('profile_pic'), async (req, res) => {
   //adding the profile pic  file here 
    console.log("profile route is hitting uploaded file....",req.file)
   const file = req.file;
@@ -67,7 +67,7 @@ router.post("/profile/edit/upload",ensureAuthenticated, upload.single('profile_p
   }
  else {
   console.log("req user is working here:",req.user.username)
-   addprofilepic(file.filename, req.user.username );
+ await  addprofilepic(file.filename, req.user.username );
   res.json({ message: "Upload successful", redirectUrl: "/" });
   }
 
