@@ -58,7 +58,7 @@ router.get("/profile/:username/edit", (req, res) => {
 
 
 router.post("/profile/edit/upload",ensureAuthenticated, upload.single('profile_pic'), async (req, res) => {
-  //adding the profile pic  file here 
+  
    console.log("profile route is hitting uploaded file....",req.file)
   const file = req.file;
 
@@ -113,7 +113,7 @@ router.post("/login/submit", passport.authenticate("local",{
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
   console.log("username : ",username);
   try {
-    const user_result = await getPassword(username);//from db
+    const user_result = await getPassword(username);
    
     console.log("hashreasult ", user_result)
     if  (user_result.length === 0) {
@@ -171,7 +171,7 @@ router.post("/register/action", upload.single('uploaded_file'),async (req,res)=>
     name:req.body.name,
     gmail: req.body.username,
     password: hashedPassword,
-    role: req.body.role || "user", // Default role if not provided
+    role: req.body.role || "user", 
      profile_pic: req.file ? req.file.filename : null,
     age:req.body.age
   });
