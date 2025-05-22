@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
     try {
         let Active_profile_pic;
-        const userobj = await getcomment(); // Fetch comments
+        const userobj = await getcomment();
 
         console.log("comments in home ", userobj);
         let all_comments = userobj || [];
@@ -123,9 +123,9 @@ router.post("/catering/action", (req, res) => {
 
 router.post("/photography/filter", async (req, res) => {
     try {
-        const result = await getfilteredproduct(req.body.value); // assume async
+        const result = await getfilteredproduct(req.body.value); 
         console.log("result from db ", result)
-        res.json({ result: result }); // sends a JSON object with the result
+        res.json({ result: result }); 
     } catch (error) {
         console.error("Error filtering products:", error);
         res.status(500).json({ error: "Something went wrong." });
@@ -307,6 +307,7 @@ router.post("/payment", async (req, res) => {
         amount: amount,
         currency: "INR",
         receipt: `receipt_${Date.now()}`,
+        
         payment_capture: 1,
     };
     try {
