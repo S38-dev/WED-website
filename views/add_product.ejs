@@ -331,7 +331,7 @@ body {
       });
     }
 
-    // Create FileList from array (magic trick)
+ 
     function createFileList(files) {
       const dt = new DataTransfer();
       files.forEach(file => dt.items.add(file));
@@ -339,7 +339,7 @@ body {
       return dt.files;
     }
 
-    // Inject files into hidden input before form submit
+    
     document.querySelector(".main").addEventListener("submit", function (e) {
       const hiddenInput = document.getElementById("hidden-product-upload");
       hiddenInput.files = createFileList(uploads.product);
